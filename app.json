@@ -1,0 +1,55 @@
+{
+  "name": "data-fountain-testing",
+  "description": "testing ",
+  "scripts": {
+  },
+  "env": {
+    "FORECAST_API": {
+      "required": true
+    },
+    "FORECAST_COORD_LAT": {
+      "required": true
+    },
+    "FORECAST_COORD_LON": {
+      "required": true
+    },
+    "KADIRA_APP_ID": {
+      "required": true
+    },
+    "KADIRA_APP_SECRET": {
+      "required": true
+    },
+    "MAIL_URL": {
+      "required": true
+    },
+    "MAINTENANCE_PAGE_URL": {
+      "required": true
+    },
+    "METEOR_SETTINGS": {
+      "required": true
+    },
+    "MONGODB_URI": {
+      "required": true
+    },
+    "ROOT_URL": {
+      "required": true
+    },
+    "SENDGRID_PASSWORD": {
+      "required": true
+    },
+    "SENDGRID_USERNAME": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "mongolab",
+    "sendgrid"
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/AdmitHub/meteor-buildpack-horse.git"
+    }
+  ]
+}
