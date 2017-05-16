@@ -10,7 +10,7 @@ const stationWebService = new StationWebService();
 
 Meteor.startup(() => {
     let stations = Stations.find({}).fetch();
-    if (stations.length === 0) {
+    if (Meteor.settings.rekick == true) {
         stationWebService.fetchStations();
     }
     stationWebService.fetchStationsData();
