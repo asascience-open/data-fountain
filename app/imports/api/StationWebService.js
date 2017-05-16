@@ -605,7 +605,11 @@ export default class StationWebService {
             const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
             const DURATION = Meteor.settings.defaultDuration;
             const COORD = [process.env.FORECAST_COORD_LAT, process.env.FORECAST_COORD_LON] || [Meteor.settings.forecastIoCoord[0], Meteor.settings.forecastIoCoord[1]];
-            let referenceStation = Stations.findOne({isPrimary: true}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
+
+            let User = Meteor.users.findOne({id: Meteor.userID});
+            let primaryStationTitle = User.profile.primaryStation;
+
+            let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             if (referenceStation) {
                 let referenceStationData = Data.findOne({stationId: referenceStation.stationId}, {fields: {'data.times': 1}});
                 let timeSet = referenceStationData.data.times;
@@ -633,4 +637,5 @@ export default class StationWebService {
             }, 10000);
         }
     }
+
 }
