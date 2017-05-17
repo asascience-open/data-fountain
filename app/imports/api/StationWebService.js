@@ -611,14 +611,19 @@ export default class StationWebService {
 
             let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             if (referenceStation) {
-                let referenceStationData = Data.findOne({stationId: referenceStation.stationId}, {fields: {'data.times': 1}});
-                let timeSet = referenceStationData.data.times;
+
+                let topPlotDataParameter = User.profile.topPlotDataParameter;
+                let primaryStationData = Data.findOne({title: primaryStationTitle},
+                                                  {fields: {data: 1, title: 1}});
+                let times = primaryStationData.data[topPlotDataParameter].times;
+                times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
+
                 let weather = Weather.find({}).fetch();
 
                 let removeCount = Weather.remove({});
-                let TEMPTimeSet = timeSet.splice(timeSet.length - 55, timeSet.length - 1);
-                for (let i=0; i < TEMPTimeSet.length -1; i++) {
-                    let unixTime = moment(TEMPTimeSet[i]).unix();
+
+                for (let i=0; i < times.length -1; i++) {
+                    let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
                     HTTP.get(url, (error, response) => {
                         if (error) {

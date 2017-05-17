@@ -1,4 +1,6 @@
 import { UserPreferences } from '/imports/startup/lib/collections/user-preferences.js';
+import  StationWebService  from '/imports/api/StationWebService.js';
+const stationWebService = new StationWebService();
 /*****************************************************************************/
 /*  Server Methods */
 /*****************************************************************************/
@@ -15,5 +17,8 @@ Meteor.methods({
     },
     'server/getUserPreferences': function(){
         return UserPreferences.find({owner: this.userId}).fetch();
+    },
+    'server/fetchWeatherForecast': function(){
+        stationWebService.fetchWeatherForecast();
     }
 });
