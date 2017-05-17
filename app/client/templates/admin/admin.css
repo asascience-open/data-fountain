@@ -30,4 +30,10 @@ html{
     transition: all 1s ease;
 }
 
+.admin .paramName {
+    padding: 8px;
+}
 
+.admin .stationParameterCheckbox {
+    margin: 4px 5px 2px 2px;
+}
