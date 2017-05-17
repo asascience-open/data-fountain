@@ -26,7 +26,7 @@
                     <!-- </div> -->
                     <div class="form-group">
                         <label class="col-md-2 control-label">Station Data View</label>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default stationDataViewOption multipleStation active">Multiple Station</button>
                                 <button type="button" class="btn btn-default stationDataViewOption singleStation">Single Station</button>
@@ -37,7 +37,7 @@
                         <label class="col-md-2 control-label">
                             Primary Station
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <select class="category-select form-control js-select-primary" id="primaryStation">
                                 {{#unless primaryStation}}
                                     <option value="">-- Please Choose One --</option>
@@ -53,7 +53,7 @@
                         <label class="col-md-2 control-label">
                             Line Plot (top)
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <select class="category-select form-control js-top-plot-param" id="topPlotDataParameter">
                                 {{#each dataParams}}
                                     <option value="{{this.name}}"> {{this.uiName}}</option>
@@ -66,7 +66,7 @@
                         <label class="col-md-2 control-label">
                             Bar Plot (bottom)
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <select class="category-select form-control js-select-bottom-parameter" id="bottomPlotDataParameter">
                                 {{#each dataParams}}
                                 <option value="{{this.name}}">{{this.uiName}}</option>
@@ -78,18 +78,22 @@
                     </div>
                     <div class="form-group" id="singleStationParameters">
                         <label class="col-md-2 control-label">Station Parameters</label>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
+                          <div class="col-md-12">
                             {{#each singleStationParameters}}
-                                <label for="{{this.name}}"><input type="checkbox" class="stationParameterCheckbox" id="{{this.name}}">{{this.uiName}}</label>
+                              <div class="col-md-4">
+                                <label class="paramName" for="{{this.name}}"><input type="checkbox" class="stationParameterCheckbox" id="{{this.name}}">{{this.uiName}}</label>
+                              </div>
                             {{/each}}
-                            <p class="control-explanation">Select parameters to graph for a single station.</p>
+                          </div>
+                          <p class="control-explanation"><br />Select parameters to graph for a single station.</p>
                         </div>
                     </div>
                     <div class="form-group parameterAlertsDiv">
                         <label class="col-md-2 control-label" for="paramAlerts">
                             Parameter Alerts
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-4">
                                     <input id="lowAlert" type="text" class="form-control form-control-rounded" placeholder="Low"/>
@@ -124,14 +128,58 @@
                         <label class="col-md-2 control-label">
                             Proximity Stations
                         </label>
-                        <div class="col-md-4">
-                            {{#each stationsList}}
-                            <label for="{{this.title}}">
-                                <input type="checkbox" class="proximityStationCheckbox" id="{{this.title}}">
-                                {{this.title}}</label>
-                            {{/each}}
-                            <p class="control-explanation">Nearby stations to display on the bottom bar plot.</p>
+                        <div class="col-md-10">
+                          <div class="col-md-3"  id="Wind/Waves">
+                            <h2>Wind/Waves</h2>
+                              {{#each stationsList}}
+                                {{#if this.category.windWaves}}
+                                  <label for="{{this.title}}" >
+                                      <input type="checkbox" class="proximityStationCheckbox" id="{{this.title}}">
+                                      {{this.title}}</label>
+                                    <br>
+                                {{/if}}
+                              {{/each}}
+                          </div>
+                          <div class="col-md-3"  id="CBIBS">
+                            <h2>CBIBS</h2>
+                              {{#each stationsList}}
+                                {{#if this.category.cbibs}}
+                                  <label for="{{this.title}}" >
+                                      <input type="checkbox" class="proximityStationCheckbox" id="{{this.title}}">
+                                      {{this.title}}</label>
+                                    <br>
+                                {{/if}}
+                              {{/each}}
+                          </div>
+                          <div class="col-md-3"  id="CRWO">
+                            <h2>CRWO</h2>
+                              {{#each stationsList}}
+                                {{#if this.category.crwo}}
+                                  <label for="{{this.title}}" >
+                                      <input type="checkbox" class="proximityStationCheckbox" id="{{this.title}}">
+                                      {{this.title}}</label>
+                                    <br>
+                                {{/if}}
+                              {{/each}}
+                          </div>
+                          <div class="col-md-3"  id="Other">
+                            <h2>Other</h2>
+                              {{#each stationsList}}
+                                {{#if this.category.other}}
+                                  <label for="{{this.title}}" >
+                                      <input type="checkbox" class="proximityStationCheckbox" id="{{this.title}}">
+                                      {{this.title}}</label>
+                                    <br>
+                                {{/if}}
+                              {{/each}}
+                          </div>
+                          <br>
                         </div>
+                        <div class="col-md-2 control-label">
+                        </div>
+                        <div class="col-md-10">
+                        <p class="control-explanation">Nearby stations to display on the bottom bar plot.</p>
+                      </div>
                     </div>
                     <!-- <div class="form&#45;group"> -->
                         <!--     <label class="col&#45;md&#45;2 control&#45;label"> -->
@@ -145,7 +193,7 @@
                         <label class="col-md-2 control-label">
                             Page Refresh Interval (seconds)
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <input type="text" class="form-control form-control-rounded" id="refreshInterval" value={{refreshInterval}} />
                             <p class="control-explanation">Select a page refresh interval.</p>
                         </div>
@@ -154,7 +202,7 @@
                         <label class="col-md-2 control-label">
                             Date Range
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <input type="rangeslide"/>
                             <input type="checkbox" id="chkKeepUpdated" /><label>&nbsp; Keep updated to current time?</label>
                             <p class="control-explanation">Select a range of data to display. This parameter is limited by data availability</p>
@@ -164,7 +212,7 @@
                         <label class="col-md-2 control-label">
                             Ticker Marquee
                         </label>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-addon">
                                         <input type="checkbox" aria-label="..." id="tickerEnabledInput"><span>  Enabled</span>

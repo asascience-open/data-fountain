@@ -605,16 +605,25 @@ export default class StationWebService {
             const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
             const DURATION = Meteor.settings.defaultDuration;
             const COORD = [process.env.FORECAST_COORD_LAT, process.env.FORECAST_COORD_LON] || [Meteor.settings.forecastIoCoord[0], Meteor.settings.forecastIoCoord[1]];
-            let referenceStation = Stations.findOne({isPrimary: true}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
+
+            let User = Meteor.users.findOne({id: Meteor.userID});
+            let primaryStationTitle = User.profile.primaryStation;
+
+            let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             if (referenceStation) {
-                let referenceStationData = Data.findOne({stationId: referenceStation.stationId}, {fields: {'data.times': 1}});
-                let timeSet = referenceStationData.data.times;
+
+                let topPlotDataParameter = User.profile.topPlotDataParameter;
+                let primaryStationData = Data.findOne({title: primaryStationTitle},
+                                                  {fields: {data: 1, title: 1}});
+                let times = primaryStationData.data[topPlotDataParameter].times;
+                times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
+
                 let weather = Weather.find({}).fetch();
 
                 let removeCount = Weather.remove({});
-                let TEMPTimeSet = timeSet.splice(timeSet.length - 55, timeSet.length - 1);
-                for (let i=0; i < TEMPTimeSet.length -1; i++) {
-                    let unixTime = moment(TEMPTimeSet[i]).unix();
+
+                for (let i=0; i < times.length -1; i++) {
+                    let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
                     HTTP.get(url, (error, response) => {
                         if (error) {
@@ -633,4 +642,5 @@ export default class StationWebService {
             }, 10000);
         }
     }
+
 }
