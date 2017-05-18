@@ -81,11 +81,12 @@ export default class StationWebService {
 
             // set the end date to today.
             let endDate = DATE.toISOString();
-
+            console.log(endDate);
             // calculate a new date from the duration
             let startDate = new Date();
             startDate.setHours(startDate.getHours() - DURATION);
             startDate = startDate.toISOString();
+            console.log(startDate);
 
             let stations = Stations.find({}, {
                 fields: {dataUrl: 1, id: 1, title: 1, stationId: 1, usgs: 1, lat: 1},
@@ -617,6 +618,8 @@ export default class StationWebService {
                                                   {fields: {data: 1, title: 1}});
                 let times = primaryStationData.data[topPlotDataParameter].times;
                 times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
+                console.log(User.profile);
+                console.log(times[0],times[times.length-1]);
 
                 let weather = Weather.find({}).fetch();
 
@@ -625,6 +628,7 @@ export default class StationWebService {
                 for (let i=0; i < times.length -1; i++) {
                     let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
+                    console.log(url);
                     HTTP.get(url, (error, response) => {
                         if (error) {
                             console.log(`fetchWeatherForecast ${error}`);

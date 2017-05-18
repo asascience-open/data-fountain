@@ -11,6 +11,7 @@ Meteor.methods({
         return UserPreferences.update(docId, {$set: doc});
     },
     'server/removeUserPreference': function(docId) {
+        console.log(typeof(docID));
         if (typeof(docId) === 'string') {
             return UserPreferences.remove(docId);
         };
