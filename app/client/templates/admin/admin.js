@@ -129,9 +129,9 @@ function getSubmitPayload(){
     });
 
     //Get data collected from the date slider and process it.
-    let sliderData = Session.get('sliderData');
+    let sliderData = $('input[id="dateRangeSlider"]').data('ionRangeSlider');
     let stationData = Data.findOne({title: primaryStation});
-    let dateIndexes = findDateIndexes(moment(sliderData.from, 'X') , moment(sliderData.to, 'X'),  stationData.data[$('#topPlotDataParameter').val()].times);
+    let dateIndexes = findDateIndexes(moment(sliderData.result.from, 'X') , moment(sliderData.result.to, 'X'),  stationData.data[$('#topPlotDataParameter').val()].times);
     let payload = {
         'profile':{
             'stationViewMode': viewMode,
@@ -147,8 +147,8 @@ function getSubmitPayload(){
             'cycleStationParams': $('#chkCycleParams').prop('checked'),
             'parameterAlerts': parameterAlerts,
             'dateSliderData':{
-                from: sliderData.from,
-                to:sliderData.to
+                from: sliderData.result.from,
+                to:sliderData.result.to
             },
             'tickerEnabled':$('#tickerEnabledInput').prop('checked'),
             'fromTimeIndex': dateIndexes[0],
@@ -778,7 +778,7 @@ Template.Admin.onCreated(function() {
 });
 
 Template.Admin.onRendered(function() {
-    let $slider = $('input[type="rangeslide"]');
+    let $slider = $('input[id="dateRangeSlider"]');
 
     let saveTimeRange = ((sliderData) => {
         //Update the session with the slider data. We will save it on submit.
@@ -793,7 +793,7 @@ Template.Admin.onRendered(function() {
         $slider.ionRangeSlider({
             type: 'datetime',
             prettify: function (num) {
-                return moment(num, 'X').format('LL');
+                return moment(num, 'X').format('LLL');
             },
             onStart: saveTimeRange,
             onUpdate: saveTimeRange,
