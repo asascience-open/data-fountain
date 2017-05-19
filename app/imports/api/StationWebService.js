@@ -618,6 +618,7 @@ export default class StationWebService {
                                                   {fields: {data: 1, title: 1}});
                 let times = primaryStationData.data[topPlotDataParameter].times;
                 times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
+                console.log(User.profile);
                 console.log(times[0],times[times.length-1]);
 
                 let weather = Weather.find({}).fetch();
