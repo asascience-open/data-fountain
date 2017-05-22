@@ -130,6 +130,7 @@ function getSubmitPayload(){
 
     //Get data collected from the date slider and process it.
     let sliderData = $('input[id="dateRangeSlider"]').data('ionRangeSlider');
+    console.log(sliderData);
     let stationData = Data.findOne({title: primaryStation});
     let dateIndexes = findDateIndexes(moment(sliderData.result.from, 'X') , moment(sliderData.result.to, 'X'),  stationData.data[$('#topPlotDataParameter').val()].times);
     let payload = {
