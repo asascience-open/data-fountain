@@ -379,6 +379,10 @@ Template.Admin.events({
         });
     },
 
+    'click #fetchWeather'(event, template){
+        Meteor.call('server/fetchWeatherForecast');
+    },
+
     'click .stationDataViewOption'(event, template){
 
         //Change which button is active
@@ -480,8 +484,6 @@ Template.Admin.events({
                     });
                     //Update the preferences so that the new option apears on the load preferences modal.
                     Session.set('CurrentPreference', payload);
-                    fetchUserPreferences();
-                    Meteor.call('server/fetchWeatherForecast');
                 }
             });
         }

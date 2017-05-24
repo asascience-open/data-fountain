@@ -607,19 +607,18 @@ export default class StationWebService {
             const DURATION = Meteor.settings.defaultDuration;
             const COORD = [process.env.FORECAST_COORD_LAT, process.env.FORECAST_COORD_LON] || [Meteor.settings.forecastIoCoord[0], Meteor.settings.forecastIoCoord[1]];
 
-            let User = Meteor.users.findOne({id: Meteor.userID});
-            let primaryStationTitle = User.profile.primaryStation;
+            let payload = Meteor.call('server/getLastPreferences');
+
+            let primaryStationTitle = payload.profile.primaryStation;
 
             let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             if (referenceStation) {
 
-                let topPlotDataParameter = User.profile.topPlotDataParameter;
+                let topPlotDataParameter = payload.profile.topPlotDataParameter;
                 let primaryStationData = Data.findOne({title: primaryStationTitle},
                                                   {fields: {data: 1, title: 1}});
                 let times = primaryStationData.data[topPlotDataParameter].times;
-                times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
-                console.log(User.profile);
-                console.log(times[0],times[times.length-1]);
+                times = times.slice(payload.profile.fromTimeIndex, payload.profile.toTimeIndex);
 
                 let weather = Weather.find({}).fetch();
 
@@ -628,7 +627,6 @@ export default class StationWebService {
                 for (let i=0; i < times.length -1; i++) {
                     let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
-                    console.log(url);
                     HTTP.get(url, (error, response) => {
                         if (error) {
                             console.log(`fetchWeatherForecast ${error}`);
