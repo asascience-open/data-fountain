@@ -14,7 +14,6 @@ SyncedCron.add({
         }
 
         stationWebService.fetchStationsData();
-        stationWebService.fetchWeatherForecast();
     }
 });
 
