@@ -148,7 +148,7 @@ function getSubmitPayload(){
             'parameterAlerts': parameterAlerts,
             'dateSliderData':{
                 from: sliderData.result.from,
-                to:sliderData.result.to
+                to: sliderData.result.to
             },
             'tickerEnabled':$('#tickerEnabledInput').prop('checked'),
             'fromTimeIndex': dateIndexes[0],
@@ -364,6 +364,7 @@ Template.Admin.events({
             Session.set('DataPreferences', prefs);
         });
 
+
         Meteor.users.update(Meteor.userId(), {
             $set: originalPayload
         }, {multi: true}, function(err, res){
@@ -372,7 +373,18 @@ Template.Admin.events({
             }else{
                 $('.panel-body').css('opacity', 0);
                 $('.spinner').css('opacity', 1);
-                Router.go('/');
+                Meteor.wrapAsync(Meteor.call('server/fetchWeatherForecast', function(err, res){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log(res);
+                    }
+                    })
+                );
+
+                Meteor.setTimeout(() => {
+                    Router.go('/');
+                }, 600); 
             }
         });
     },
@@ -478,7 +490,6 @@ Template.Admin.events({
                     });
                     //Update the preferences so that the new option apears on the load preferences modal.
                     Session.set('CurrentPreference', payload);
-                    fetchUserPreferences();
                     Meteor.call('server/fetchWeatherForecast');
                 }
             });

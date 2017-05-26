@@ -606,8 +606,8 @@ export default class StationWebService {
             const DURATION = Meteor.settings.defaultDuration;
             const COORD = [process.env.FORECAST_COORD_LAT, process.env.FORECAST_COORD_LON] || [Meteor.settings.forecastIoCoord[0], Meteor.settings.forecastIoCoord[1]];
 
-            let User = Meteor.users.findOne({id: Meteor.userID});
-            let primaryStationTitle = User.profile.primaryStation;
+            let payload = Meteor.call('server/getLastPreferences');
+            let primaryStationTitle = payload.profile.primaryStation;
 
             let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             if (referenceStation) {
