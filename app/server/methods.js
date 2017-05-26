@@ -7,11 +7,9 @@ const stationWebService = new StationWebService();
 Meteor.methods({
     'server/addUserPreference': function(doc) {
         let docId = UserPreferences.insert({profile: {}, owner: this.userId});
-        console.log(docId, this.userId);
         return UserPreferences.update(docId, {$set: doc});
     },
     'server/removeUserPreference': function(docId) {
-        console.log(typeof(docID));
         if (typeof(docId) === 'string') {
             return UserPreferences.remove(docId);
         };
