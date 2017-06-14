@@ -389,10 +389,6 @@ Template.Admin.events({
         });
     },
 
-    'click #fetchWeather'(event, template){
-        Meteor.call('server/fetchWeatherForecast');
-    },
-
     'click .stationDataViewOption'(event, template){
 
         //Change which button is active
@@ -433,6 +429,12 @@ Template.Admin.events({
         }else{
             console.log('Could not load preference');
         }
+    },
+
+    'click #weather'(event, template){
+        console.log('it is');
+        Meteor.call('server/updateWeatherForecast');
+        console.log('working');
     },
 
     'click #savePreferenceButton'(event, template){

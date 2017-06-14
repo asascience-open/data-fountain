@@ -23,7 +23,7 @@ SyncedCron.add({
         return parser.text(Meteor.settings.refreshTheData);
     },
     job() {
-        stationWebService.fetchWeatherForecast();
+        stationWebService.updateWeatherForecast();
     }
 });
 SyncedCron.start();

@@ -18,8 +18,13 @@ Meteor.methods({
         return UserPreferences.find({owner: this.userId}).fetch();
     },
     'server/getLastPreferences': function(){
-        console.log(Meteor.user, Meteor.userId, this.id);
-        return UserPreferences.findOne({owner: Meteor.user, 'profile.preferenceName':'Last Preference'} );
+        //console.log(Meteor.user(), Meteor.userId(), this.userId);
+        var user = Meteor.userId();
+        console.log(user);
+        return UserPreferences.findOne({owner: user, 'profile.preferenceName':'Last Preference'} );
+    },
+    'server/updateWeatherForecast': function(){
+        stationWebService.updateWeatherForecast();
     },
     'server/fetchWeatherForecast': function(){
         stationWebService.fetchWeatherForecast();
