@@ -18,9 +18,7 @@ Meteor.methods({
         return UserPreferences.find({owner: this.userId}).fetch();
     },
     'server/getLastPreferences': function(){
-        //console.log(Meteor.user(), Meteor.userId(), this.userId);
         var user = Meteor.userId();
-        console.log(user);
         return UserPreferences.findOne({owner: user, 'profile.preferenceName':'Last Preference'} );
     },
     'server/updateWeatherForecast': function(){

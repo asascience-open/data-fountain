@@ -3,6 +3,7 @@ import { HTTP } from 'meteor/http';
 import { moment } from 'meteor/mrt:moment';
 import Buoy from 'buoyjs';
 import humps from 'humps';
+import { UserPreferences } from '/imports/startup/lib/collections/user-preferences.js';
 
 const Future = Npm.require('fibers/future');
 
@@ -610,7 +611,6 @@ export default class StationWebService {
             let payload = Meteor.call('server/getLastPreferences');
 
             let primaryStationTitle = payload.profile.primaryStation;
-            console.log(payload);
 
             let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
             weatherData = [];
@@ -618,7 +618,6 @@ export default class StationWebService {
             if (referenceStation) {
                 weatherItem = {};
                 weatherItem['owner'] = payload.owner;
-                console.log(weatherItem);
 
                 let topPlotDataParameter = payload.profile.topPlotDataParameter;
                 let primaryStationData = Data.findOne({title: primaryStationTitle},
@@ -626,32 +625,19 @@ export default class StationWebService {
                 let times = primaryStationData.data[topPlotDataParameter].times;
                 times = times.slice(payload.profile.fromTimeIndex, payload.profile.toTimeIndex); 
 
-                //let weather = Weather.find({user: payload._id}).fetch();
                 Weather.remove({owner: payload.owner});
-                //console.log(weather);
 
-                let removeCount = Weather.remove({});
                 var responseArray = [];
                 for (let i=0; i < times.length -1; i++) {
                     let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
+                    //this try catch is designed to be synchronous so we can build the JSON before pushing to the DB 
                     try{
                         var response = HTTP.get(url);
                         weatherData.push(response.data);
                     } catch(e) {
                         console.log('fetchWeatherForecast ${e}');
                     }
-                    //HTTP.get(url, (error, response) => {
-                    //    if (error) {
-                    //        console.log(`fetchWeatherForecast ${error}`);
-                    //    } else {
-                            //responseArray.push(response.data['currently'])
-                            //response.data['user'] = payload.owner;
-                            //THIS IS ALL BROKEN. FIX IN THE AM
-                            //weatherData.push(response.data);
-
-                        //}
-                    //});
                 }
                 weatherItem['data'] = weatherData;
                 Weather.insert(weatherItem);
@@ -664,36 +650,35 @@ export default class StationWebService {
     
     updateWeatherForecast() {
         try {
-            /***************
-             *  Forecast.io
-             ***************/
+            //This routine updates all weather collections that need to be udapted
             // These are server settings, and should be configured via the user profile.
             const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
             const DATE = new Date().getTime();
-            const DURATION = Meteor.settings.defaultDuration;
-            const KNOTS_TO_MPH = 1.152;
-            const METER_TO_FT = 3.28084;
-            const MPS_TO_MPH = 2.2369363;
+            const REFRESH = Meteor.settings.refreshTiming;
 
             // set the end date to today.
             let endDate = DATE;
-            // calculate a new date from the duration
-            //////////MATTS ^ DANS v
             
             let weatherCollection = Weather.find({}).fetch();
             var weather;
-            Weather.remove({});
             for (index in weatherCollection){
                 weather = weatherCollection[index];
-                
-                weatherItem = {};
-                weatherItem['owner'] = weather.user;
-                weatherData = [];
-                console.log(weatherItem);
 
-                let lat = weather.latitude,
-                    lon = weather.longitude;
-                let startDate = (weather.hourly.data[0].time * 1000) + (DURATION * 1000 * 60 * 60);
+                //check to see if this profile needs to be updated or if we can skip
+                payload = UserPreferences.findOne({owner: weather.owner, 'profile.preferenceName':'Last Preference'} );
+                if (payload.profile.keepUpdated == false){
+                    continue;
+                }
+
+                Weather.remove({_id: weather._id});
+
+                weatherItem = {};
+                weatherItem['owner'] = weather.owner;
+                weatherData = [];
+
+                let lat = weather.data[0].latitude,
+                    lon = weather.data[0].longitude;
+                let startDate = (weather.data[0].currently.time * 1000) + (REFRESH * 1000 * 60 * 60);
 
                 if (lon) {
 
@@ -704,20 +689,16 @@ export default class StationWebService {
                         times.push(lastTime + 3600000);
                     }
 
-                    //let removeCount = Weather.remove({_id: weather._id});
-                    let removeCount = Weather.remove({});
-
                     for (let i=0; i < times.length -1; i++) {
                         let unixTime = moment(times[i]).unix();
                         let url = `https://api.darksky.net/forecast/${FORECAST_API}/${lat},${lon},${unixTime}`;
-                        HTTP.get(url, (error, response) => {
-                            if (error) {
-                                console.log(`fetchWeatherForecast ${error}`);
-                            } else {
-                                weatherData.push(response.data);
 
-                            }
-                        });
+                        try{
+                            var response = HTTP.get(url);
+                            weatherData.push(response.data);
+                        } catch(e) {
+                            console.log('fetchWeatherForecast ${e}');
+                        }
                     }
                     weatherItem['data'] = weatherData;
                     Weather.insert(weatherItem);

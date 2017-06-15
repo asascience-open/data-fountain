@@ -282,9 +282,29 @@ function findDateIndexes(startDate, endDate, dateArray){
     }
     return [startIndex, endIndex];
 }
-function camelToRegular(string) {
-    return string.replace(/([A-Z])/g, ' $1')
-    .replace(/^./, (str) => { return str.toUpperCase(); })
+function uiNameMapping(string) {
+    let mappingJson = {
+        'airTemperature': 'Air Temperature',
+        'chlorophyll': 'Chlorophyll',
+        'dissolvedOxygen': 'Dissolved Oxygen',
+        'oceanTemperature': 'Ocean Temperature',
+        'salinity': 'Salinity',
+        'turbidity': 'Turbidity',
+        'waterLevel': 'Water Level',
+        'windDirection': 'Wind Direction',
+        'windSpeed': 'Wind Speed',
+        'waveHeight': 'Wave Height',
+        'waterTemperature': 'Water Temperature',
+        'ph': 'pH',
+        'rainFall': 'Rain Fall',
+        'seaWaterSalinity': 'Salinity',
+        'relativeHumidity': 'Relative Humidity',
+        'dewPoint': 'Dew Point',
+        'airPressure': 'Barometric Pressure',
+        'seaWaterTemperature': 'Water Temperature'
+    }
+    return mappingJson[string];
+
 }
 
 let getDataParams = (function () {
@@ -298,7 +318,7 @@ let getDataParams = (function () {
             parameterNames.sort();
             let dataParams = [];
             parameterNames.forEach(function(obj){
-                let object = {'name' : obj, 'uiName': camelToRegular(obj)};
+                let object = {'name' : obj, 'uiName': uiNameMapping(obj)};
                 dataParams.push(object);
             });
             return dataParams;
@@ -429,12 +449,6 @@ Template.Admin.events({
         }else{
             console.log('Could not load preference');
         }
-    },
-
-    'click #weather'(event, template){
-        console.log('it is');
-        Meteor.call('server/updateWeatherForecast');
-        console.log('working');
     },
 
     'click #savePreferenceButton'(event, template){
@@ -734,7 +748,7 @@ Template.Admin.helpers({
 
             let parameterList = [];
             keys.forEach(function(obj){
-                parameterList.push({'name' : obj, 'uiName': camelToRegular(obj)});
+                parameterList.push({'name' : obj, 'uiName': uiNameMapping(obj)});
             });
             return parameterList;
         } catch(e) {

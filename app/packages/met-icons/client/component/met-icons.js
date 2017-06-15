@@ -103,10 +103,8 @@ Template.MetIcons.onCreated(function() {
             ndbc: weather.ndbc
         }
     });
-    //console.log(weatherCollection[0].data);
     Tracker.autorun(() => {
         weather.forecastIo = weatherCollection[0].data.filter((obj) => {
-            //console.log(obj);
             if(obj.currently !== undefined){
                 return obj.currently.time === moment(Session.get('globalTimer')).unix();
             }
