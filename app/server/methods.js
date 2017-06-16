@@ -7,7 +7,6 @@ const stationWebService = new StationWebService();
 Meteor.methods({
     'server/addUserPreference': function(doc) {
         let docId = UserPreferences.insert({profile: {}, owner: this.userId});
-        console.log(docId, this.userId);
         return UserPreferences.update(docId, {$set: doc});
     },
     'server/removeUserPreference': function(docId) {
@@ -17,6 +16,13 @@ Meteor.methods({
     },
     'server/getUserPreferences': function(){
         return UserPreferences.find({owner: this.userId}).fetch();
+    },
+    'server/getLastPreferences': function(){
+        var user = Meteor.userId();
+        return UserPreferences.findOne({owner: user, 'profile.preferenceName':'Last Preference'} );
+    },
+    'server/updateWeatherForecast': function(){
+        stationWebService.updateWeatherForecast();
     },
     'server/fetchWeatherForecast': function(){
         stationWebService.fetchWeatherForecast();

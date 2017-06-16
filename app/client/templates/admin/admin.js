@@ -148,7 +148,7 @@ function getSubmitPayload(){
             'parameterAlerts': parameterAlerts,
             'dateSliderData':{
                 from: sliderData.result.from,
-                to:sliderData.result.to
+                to: sliderData.result.to
             },
             'tickerEnabled':$('#tickerEnabledInput').prop('checked'),
             'fromTimeIndex': dateIndexes[0],
@@ -282,9 +282,29 @@ function findDateIndexes(startDate, endDate, dateArray){
     }
     return [startIndex, endIndex];
 }
-function camelToRegular(string) {
-    return string.replace(/([A-Z])/g, ' $1')
-    .replace(/^./, (str) => { return str.toUpperCase(); })
+function uiNameMapping(string) {
+    let mappingJson = {
+        'airTemperature': 'Air Temperature',
+        'chlorophyll': 'Chlorophyll',
+        'dissolvedOxygen': 'Dissolved Oxygen',
+        'oceanTemperature': 'Ocean Temperature',
+        'salinity': 'Salinity',
+        'turbidity': 'Turbidity',
+        'waterLevel': 'Water Level',
+        'windDirection': 'Wind Direction',
+        'windSpeed': 'Wind Speed',
+        'waveHeight': 'Wave Height',
+        'waterTemperature': 'Water Temperature',
+        'ph': 'pH',
+        'rainFall': 'Rain Fall',
+        'seaWaterSalinity': 'Salinity',
+        'relativeHumidity': 'Relative Humidity',
+        'dewPoint': 'Dew Point',
+        'airPressure': 'Barometric Pressure',
+        'seaWaterTemperature': 'Water Temperature'
+    }
+    return mappingJson[string];
+
 }
 
 let getDataParams = (function () {
@@ -298,7 +318,7 @@ let getDataParams = (function () {
             parameterNames.sort();
             let dataParams = [];
             parameterNames.forEach(function(obj){
-                let object = {'name' : obj, 'uiName': camelToRegular(obj)};
+                let object = {'name' : obj, 'uiName': uiNameMapping(obj)};
                 dataParams.push(object);
             });
             return dataParams;
@@ -364,6 +384,7 @@ Template.Admin.events({
             Session.set('DataPreferences', prefs);
         });
 
+
         Meteor.users.update(Meteor.userId(), {
             $set: originalPayload
         }, {multi: true}, function(err, res){
@@ -372,7 +393,18 @@ Template.Admin.events({
             }else{
                 $('.panel-body').css('opacity', 0);
                 $('.spinner').css('opacity', 1);
-                Router.go('/');
+                Meteor.wrapAsync(Meteor.call('server/fetchWeatherForecast', function(err, res){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        console.log(res);
+                    }
+                    })
+                );
+
+                Meteor.setTimeout(() => {
+                    Router.go('/');
+                }, 600); 
             }
         });
     },
@@ -478,7 +510,6 @@ Template.Admin.events({
                     });
                     //Update the preferences so that the new option apears on the load preferences modal.
                     Session.set('CurrentPreference', payload);
-                    fetchUserPreferences();
                     Meteor.call('server/fetchWeatherForecast');
                 }
             });
@@ -717,7 +748,7 @@ Template.Admin.helpers({
 
             let parameterList = [];
             keys.forEach(function(obj){
-                parameterList.push({'name' : obj, 'uiName': camelToRegular(obj)});
+                parameterList.push({'name' : obj, 'uiName': uiNameMapping(obj)});
             });
             return parameterList;
         } catch(e) {

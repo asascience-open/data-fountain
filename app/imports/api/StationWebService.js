@@ -3,6 +3,7 @@ import { HTTP } from 'meteor/http';
 import { moment } from 'meteor/mrt:moment';
 import Buoy from 'buoyjs';
 import humps from 'humps';
+import { UserPreferences } from '/imports/startup/lib/collections/user-preferences.js';
 
 const Future = Npm.require('fibers/future');
 
@@ -81,11 +82,12 @@ export default class StationWebService {
 
             // set the end date to today.
             let endDate = DATE.toISOString();
-
+            console.log(endDate);
             // calculate a new date from the duration
             let startDate = new Date();
             startDate.setHours(startDate.getHours() - DURATION);
             startDate = startDate.toISOString();
+            console.log(startDate);
 
             let stations = Stations.find({}, {
                 fields: {dataUrl: 1, id: 1, title: 1, stationId: 1, usgs: 1, lat: 1},
@@ -606,40 +608,121 @@ export default class StationWebService {
             const DURATION = Meteor.settings.defaultDuration;
             const COORD = [process.env.FORECAST_COORD_LAT, process.env.FORECAST_COORD_LON] || [Meteor.settings.forecastIoCoord[0], Meteor.settings.forecastIoCoord[1]];
 
-            let User = Meteor.users.findOne({id: Meteor.userID});
-            let primaryStationTitle = User.profile.primaryStation;
+            let payload = Meteor.call('server/getLastPreferences');
+
+            let primaryStationTitle = payload.profile.primaryStation;
 
             let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
-            if (referenceStation) {
+            weatherData = [];
 
-                let topPlotDataParameter = User.profile.topPlotDataParameter;
+            if (referenceStation) {
+                weatherItem = {};
+                weatherItem['owner'] = payload.owner;
+
+                let topPlotDataParameter = payload.profile.topPlotDataParameter;
                 let primaryStationData = Data.findOne({title: primaryStationTitle},
                                                   {fields: {data: 1, title: 1}});
                 let times = primaryStationData.data[topPlotDataParameter].times;
-                times = times.slice(User.profile.fromTimeIndex, User.profile.toTimeIndex);
+                times = times.slice(payload.profile.fromTimeIndex, payload.profile.toTimeIndex); 
 
-                let weather = Weather.find({}).fetch();
+                Weather.remove({owner: payload.owner});
 
-                let removeCount = Weather.remove({});
-
+                var responseArray = [];
                 for (let i=0; i < times.length -1; i++) {
                     let unixTime = moment(times[i]).unix();
                     let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
-                    HTTP.get(url, (error, response) => {
-                        if (error) {
-                            console.log(`fetchWeatherForecast ${error}`);
-                        } else {
-                            Weather.insert(response.data);
+                    //this try catch is designed to be synchronous so we can build the JSON before pushing to the DB 
+                    try{
+                        var response = HTTP.get(url);
+                        weatherData.push(response.data);
+                    } catch(e) {
+                        console.log('fetchWeatherForecast ${e}');
+                    }
+                }
+                weatherItem['data'] = weatherData;
+                Weather.insert(weatherItem);
+            }
+        } catch (exception) {
+            console.log('There was an error, weather data was not updated');
+            console.log(exception);
+        }
+    }
+    
+    updateWeatherForecast() {
+        try {
+            //This routine updates all weather collections that need to be udapted
+            // These are server settings, and should be configured via the user profile.
+            const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
+            const DATE = new Date().getTime();
+            const REFRESH = Meteor.settings.refreshTiming;
+            const DEBUG = Meteor.settings.debug;
+
+            // set the end date to today.
+            let endDate = DATE;
+            
+            let weatherCollection = Weather.find({}).fetch();
+            var weather;
+            for (index in weatherCollection){
+                weather = weatherCollection[index];
+
+                //check to see if this profile needs to be updated or if we can skip
+                try {
+                    payload = UserPreferences.findOne({owner: weather.owner, 'profile.preferenceName':'Last Preference'} );
+                    if (payload.profile.keepUpdated == false){
+                        continue;
                         }
-                    });
+                } catch (ex) {
+                    continue;
+                }
+
+                Weather.remove({_id: weather._id});
+
+                weatherItem = {};
+                weatherItem['owner'] = weather.owner;
+                weatherData = [];
+
+                let lat = weather.data[0].latitude,
+                    lon = weather.data[0].longitude;
+
+                weatherItem['latitude'] = lat;
+                weatherItem['longitude'] = lon;
+
+                let startDate = (weather.data[0].currently.time * 1000) + (REFRESH * 1000 * 60 * 60);
+
+                if (lon) {
+
+                    let times = [startDate];
+                    
+                    while (times[times.length -1] <= endDate){
+                        lastTime = times[times.length -1];
+                        times.push(lastTime + 3600000);
+                    }
+
+                    for (let i=0; i < times.length -1; i++) {
+                        let unixTime = moment(times[i]).unix();
+                        let url = `https://api.darksky.net/forecast/${FORECAST_API}/${lat},${lon},${unixTime}`;
+
+                        try{
+                            var response = HTTP.get(url);
+                            delete response.data.hourly;
+                            delete response.data.daily;
+                            delete response.data.flags;
+                            delete response.data.minutely;
+                            weatherData.push(response.data);
+                            if (DEBUG == true) {
+                                console.log(response.data);
+                            }
+                        } catch(e) {
+                            console.log('fetchWeatherForecast', e);
+                        }
+                    }
+                    weatherItem['data'] = weatherData;
+                    Weather.insert(weatherItem);
                 }
             }
         } catch (exception) {
-            console.log('There was an error, trying again in 10 seconds');
+            console.log('There was an error, weather data was not updated');
             console.log(exception);
-            Meteor.setTimeout(() => {
-                this.fetchWeatherForecast();
-            }, 10000);
         }
     }
 

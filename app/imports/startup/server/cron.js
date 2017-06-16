@@ -14,17 +14,17 @@ SyncedCron.add({
         }
 
         stationWebService.fetchStationsData();
-        stationWebService.fetchWeatherForecast();
+        stationWebService.updateWeatherForecast();
     }
 });
 
-SyncedCron.add({
-    name: `Fetch the forcast ${Meteor.settings.refreshTheData}`,
-    schedule(parser) {
-        return parser.text(Meteor.settings.refreshTheData);
-    },
-    job() {
-        stationWebService.fetchWeatherForecast();
-    }
-});
+//SyncedCron.add({
+//    name: `Fetch the forcast ${Meteor.settings.refreshTheData}`,
+//    schedule(parser) {
+//        return parser.text(Meteor.settings.refreshTheData);
+//    },
+//    job() {
+//        stationWebService.updateWeatherForecast();
+//    }
+//});
 SyncedCron.start();

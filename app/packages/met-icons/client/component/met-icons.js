@@ -87,8 +87,10 @@ Template.MetIcons.helpers({
 Template.MetIcons.onCreated(function() {
     const weatherDep = new Tracker.Dependency;
     let primaryStation = Meteor.user().profile.primaryStation;
+    var userHash = Meteor.userId();
 
-    let weatherCollection = Weather.find({}).fetch(),
+    let weatherCollection = Weather.find({owner: userHash}).fetch(),
+    //let weatherCollection = Weather.find({}).fetch(),
         dataCollection = Data.findOne({title: primaryStation}, {fields: {'title': 1, 'data.windSpeed': 1, 'data.airTemperature': 1, 'data.windDirection': 1}}),
         weather = {};
 
@@ -101,9 +103,8 @@ Template.MetIcons.onCreated(function() {
             ndbc: weather.ndbc
         }
     });
-
     Tracker.autorun(() => {
-        weather.forecastIo = weatherCollection.filter((obj) => {
+        weather.forecastIo = weatherCollection[0].data.filter((obj) => {
             if(obj.currently !== undefined){
                 return obj.currently.time === moment(Session.get('globalTimer')).unix();
             }
