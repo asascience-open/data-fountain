@@ -671,7 +671,7 @@ export default class StationWebService {
                     if (payload.profile.keepUpdated == false){
                         continue;
                         }
-                } catch {
+                } catch (ex) {
                     continue;
                 }
 
