@@ -655,6 +655,7 @@ export default class StationWebService {
             const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
             const DATE = new Date().getTime();
             const REFRESH = Meteor.settings.refreshTiming;
+            const DEBUG = Meteor.settings.debug;
 
             // set the end date to today.
             let endDate = DATE;
@@ -678,6 +679,10 @@ export default class StationWebService {
 
                 let lat = weather.data[0].latitude,
                     lon = weather.data[0].longitude;
+
+                weatherItem['latitude'] = lat;
+                weatherItem['longitude'] = lon;
+
                 let startDate = (weather.data[0].currently.time * 1000) + (REFRESH * 1000 * 60 * 60);
 
                 if (lon) {
@@ -695,9 +700,16 @@ export default class StationWebService {
 
                         try{
                             var response = HTTP.get(url);
+                            delete response.data.hourly;
+                            delete response.data.daily;
+                            delete response.data.flags;
+                            delete response.data.minutely;
                             weatherData.push(response.data);
+                            if (DEBUG == true) {
+                                console.log(response.data);
+                            }
                         } catch(e) {
-                            console.log('fetchWeatherForecast ${e}');
+                            console.log('fetchWeatherForecast', e);
                         }
                     }
                     weatherItem['data'] = weatherData;
