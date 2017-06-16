@@ -666,8 +666,12 @@ export default class StationWebService {
                 weather = weatherCollection[index];
 
                 //check to see if this profile needs to be updated or if we can skip
-                payload = UserPreferences.findOne({owner: weather.owner, 'profile.preferenceName':'Last Preference'} );
-                if (payload.profile.keepUpdated == false){
+                try {
+                    payload = UserPreferences.findOne({owner: weather.owner, 'profile.preferenceName':'Last Preference'} );
+                    if (payload.profile.keepUpdated == false){
+                        continue;
+                        }
+                } catch {
                     continue;
                 }
 
