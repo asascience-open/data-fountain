@@ -710,7 +710,7 @@ export default class StationWebService {
                             delete response.data.minutely;
                             weatherData.push(response.data);
                             if (DEBUG == true) {
-                                console.log(response.data);
+                                //console.log(response.data);
                             }
                         } catch(e) {
                             console.log('fetchWeatherForecast', e);
