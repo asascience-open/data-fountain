@@ -6,3 +6,4 @@ config/production/
 *.swp
 *.swo
 *.log
+.idea/

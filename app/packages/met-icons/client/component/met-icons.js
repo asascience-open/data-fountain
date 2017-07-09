@@ -104,6 +104,12 @@ Template.MetIcons.onCreated(function() {
         }
     });
     Tracker.autorun(() => {
+        // Make sure there is weather data for this user
+        if (!weatherCollection || weatherCollection.length == 0) {
+            console.log("Could not load weather data for this user");
+            return;
+        }
+
         weather.forecastIo = weatherCollection[0].data.filter((obj) => {
             if(obj.currently !== undefined){
                 return obj.currently.time === moment(Session.get('globalTimer')).unix();

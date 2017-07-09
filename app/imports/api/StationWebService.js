@@ -625,8 +625,6 @@ export default class StationWebService {
                 let times = primaryStationData.data[topPlotDataParameter].times;
                 times = times.slice(payload.profile.fromTimeIndex, payload.profile.toTimeIndex); 
 
-                Weather.remove({owner: payload.owner});
-
                 var responseArray = [];
                 for (let i=0; i < times.length -1; i++) {
                     let unixTime = moment(times[i]).unix();
@@ -640,6 +638,10 @@ export default class StationWebService {
                     }
                 }
                 weatherItem['data'] = weatherData;
+
+                // Remove and re-add weather item, making sure to do this as close to possible to one another. This
+                //   prevents "cache" like issues where the site doesn't work while the weather web requests are running
+                Weather.remove({owner: payload.owner});
                 Weather.insert(weatherItem);
             }
         } catch (exception) {
@@ -675,8 +677,6 @@ export default class StationWebService {
                     continue;
                 }
 
-                Weather.remove({_id: weather._id});
-
                 weatherItem = {};
                 weatherItem['owner'] = weather.owner;
                 weatherData = [];
@@ -710,13 +710,17 @@ export default class StationWebService {
                             delete response.data.minutely;
                             weatherData.push(response.data);
                             if (DEBUG == true) {
-                                console.log(response.data);
+                                //console.log(response.data);
                             }
                         } catch(e) {
                             console.log('fetchWeatherForecast', e);
                         }
                     }
                     weatherItem['data'] = weatherData;
+
+                    // Remove and re-add weather item, making sure to do this as close to possible to one another. This
+                    //   prevents "cache" like issues where the site doesn't work while the weather web requests are running
+                    Weather.remove({_id: weather._id});
                     Weather.insert(weatherItem);
                 }
             }

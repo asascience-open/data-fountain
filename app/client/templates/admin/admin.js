@@ -798,6 +798,9 @@ Template.Admin.helpers({
     },
     keepUpdated() {
         return (Meteor.user() && Meteor.user().profile.keepUpdated === 'om') ? "checked" : null;
+    },
+    serverInstance() {
+        return Meteor.settings.public.serverInstance;
     }
 });
 
