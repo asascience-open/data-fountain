@@ -24,13 +24,18 @@ Template.OceanPlots.helpers({
     topPlot() {
         try {
             let userProfile = Meteor.user().profile
+            let key = `data.${userProfile.topPlotDataParameter}`;
+
             let primaryStation = userProfile.primaryStation,
                 topPlotDataParameter = userProfile.topPlotDataParameter,
                 primaryStationData = Data.findOne({title: primaryStation},
-                                                  {fields: {data: 1, title: 1}}),
+                                                  {fields: {[key]: 1, title: 1}}),
                 plotDisplayName = camelToRegular(topPlotDataParameter);
             if (!primaryStationData.data) throw `No Data available for ${primaryStation}`;
-            if (!primaryStationData.data.times) throw `No Time for ${primaryStation}`;
+            if (!primaryStationData.data[userProfile.topPlotDataParameter].times) {
+                console.log(primaryStationData.data);
+                throw `No Time for ${primaryStation}`;
+            }
 
             let times = primaryStationData.data[topPlotDataParameter].times,
                 plotData = primaryStationData.data[topPlotDataParameter].values,

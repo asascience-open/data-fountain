@@ -10,6 +10,6 @@
   "refreshTiming": 2,
   "forecastIoApi": "1fe6ba0f5a6bbbf4e3681e61d6a0e205",
   "forecastIoCoord": [37.82, -75.98],
-  "rekick": false,
-  "debug": true
+  "rekick": true,
+  "debug": false
 }

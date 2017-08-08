@@ -35,10 +35,14 @@ Template.Home.onCreated(function(){
     let DURATION = (userProfile.toTimeIndex - userProfile.fromTimeIndex) -1;
     let TIMER_DELAY = userProfile.refreshInterval * 1000;
     let REFERENCE_STATION = userProfile.primaryStation;
-    let dataTimes = Data.findOne({title: REFERENCE_STATION});
+    let key = `data.${userProfile.topPlotDataParameter}.times`;
+    let dataTimes = Data.findOne(
+        {title: REFERENCE_STATION},
+        {fields: {title: 1, [key]: 1}}
+    );
+
     dataTimes = dataTimes.data[userProfile.topPlotDataParameter].times;
     let displayDataTimes = dataTimes.slice(userProfile.fromTimeIndex, userProfile.toTimeIndex);
-
 
     // using var explicitly
     var time;
@@ -114,6 +118,7 @@ Template.Home.onCreated(function(){
     };
 
     //Start the ticker.
+//    this.runTimer();
     this.stopTimerHandle = Meteor.setInterval(() => {
         this.runTimer();
     }, this.timerDelay);

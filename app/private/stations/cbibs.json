@@ -448,6 +448,25 @@
         "isPrimary": false
     },
     {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/CBMM/CBMM.ncml",
+        "oceans_map_parameters": [
+            "Rainfall",
+            "Wind_Dir_Mean",
+            "Wind_Speed_Mean",
+            "Dew_Point",
+            "mg_Diss_Ox",
+            "Rel_Humidity",
+            "Salinity",
+            "Atemp",
+            "Sp_Cond",
+            "Baro_Press",
+            "WDir_I",
+            "Wtemp",
+            "WSpd_I",
+            "pH",
+            "DO__percent",
+            "Turbidity"
+        ],
         "cbibs_data": "URLROOTapi/opendap?url=http://data.oceansmap.com/thredds/dodsC/cbmm_ag/CBMM/CBMM.ncml",
         "cbibs_parameters": [
             "wind_speed",
@@ -712,6 +731,134 @@
         "createdAt": 1471982630,
         "stationId": "41046",
         "isPrimary": false
-    }
+    },
 
+    {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_BOB_3/WAC_BOB_3.ncml",
+        "oceans_map_parameters": [
+            "DO",
+            "Temp",
+            "Sal",
+            "DO_percent",
+            "BV",
+            "SpCond",
+            "pH",
+            "Turb"
+        ],
+        "data_url": "/api/data/df-30",
+        "id": "df-30",
+        "image_url": "/api/image/df-30",
+        "lat": 39.077682,
+        "lon": -76.097317,
+        "title": "Corsica",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99999",
+        "isPrimary": false
+    },
+    {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Falcone_FLO_4/Falcone_FLO_4.ncml",
+        "oceans_map_parameters": [
+            "WSA",
+            "WDA",
+            "WSI",
+            "Sal",
+            "DO_mg_L",
+            "WDI",
+            "DO_percent",
+            "Rain",
+            "Battery",
+            "ATemp",
+            "SpCond",
+            "Baro",
+            "WTemp",
+            "pH",
+            "RH",
+            "TURB",
+            "DP"
+        ],
+        "data_url": "/api/data/df-31",
+        "id": "df-31",
+        "image_url": "/api/image/df-31",
+        "lat": 39.241394,
+        "lon": -76.003632,
+        "title": "Falcone",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99997",
+        "isPrimary": false
+    },
+    {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Chino_WX/Chino_WX.ncml",
+        "oceans_map_parameters": [
+            "Dew_Point",
+            "Battery",
+            "Barometric_Pressure",
+            "ATemp",
+            "Rain",
+            "Relative_Humidity",
+            "Wind_Speed_Inst",
+            "Wind_Dir_Inst",
+            "Wind_Dir_Avg",
+            "Wind_Speed_Avg"
+        ],
+        "data_url": "/api/data/df-32",
+        "id": "df-32",
+        "image_url": "/api/image/df-32",
+        "lat": 39.233165,
+        "lon": -76.002744,
+        "title": "Chino Wx",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99996",
+        "isPrimary": false
+    },
+        {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Armiger_FLO_5/Armiger_FLO_5.ncml",
+        "oceans_map_parameters": [
+            "WSA",
+            "WDA",
+            "WSI",
+            "Sal",
+            "DO_mg_L",
+            "WDI",
+            "DO_percent",
+            "Rain",
+            "Battery",
+            "ATemp",
+            "SpCond",
+            "Baro",
+            "WTemp",
+            "pH",
+            "RH",
+            "TURB",
+            "DP"
+        ],
+        "data_url": "/api/data/df-33",
+        "id": "df-33",
+        "image_url": "/api/image/df-33",
+        "lat": 39.2381935,
+        "lon": -75.9369583,
+        "title": "Armiger",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99995",
+        "isPrimary": false
+    }
 ]

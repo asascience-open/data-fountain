@@ -284,27 +284,37 @@ function findDateIndexes(startDate, endDate, dateArray){
 }
 function uiNameMapping(string) {
     let mappingJson = {
-        'airTemperature': 'Air Temperature',
+        'airtemperature': 'Air Temperature',
         'chlorophyll': 'Chlorophyll',
-        'dissolvedOxygen': 'Dissolved Oxygen',
-        'oceanTemperature': 'Ocean Temperature',
+        'dissolvedoxygen': 'Dissolved Oxygen',
+        'oceantemperature': 'Ocean Temperature',
         'salinity': 'Salinity',
         'turbidity': 'Turbidity',
-        'waterLevel': 'Water Level',
-        'windDirection': 'Wind Direction',
-        'windSpeed': 'Wind Speed',
-        'waveHeight': 'Wave Height',
-        'waterTemperature': 'Water Temperature',
+        'waterlevel': 'Water Level',
+        'winddirection': 'Wind Direction',
+        'windspeed': 'Wind Speed',
+        'waveheight': 'Wave Height',
+        'watertemperature': 'Water Temperature',
         'ph': 'pH',
-        'rainFall': 'Rain Fall',
-        'seaWaterSalinity': 'Salinity',
-        'relativeHumidity': 'Relative Humidity',
-        'dewPoint': 'Dew Point',
-        'airPressure': 'Barometric Pressure',
-        'seaWaterTemperature': 'Water Temperature'
+        'rainfall': 'Rain Fall',
+        'seawatersalinity': 'Salinity',
+        'relativehumidity': 'Relative Humidity',
+        'dewpoint': 'Dew Point',
+        'airpressure': 'Barometric Pressure',
+        'seawatertemperature': 'Water Temperature',
+        "winddirectionmean": "Wind Direction Mean",
+        "instantaneouswindspeed": "Instantaneous Wind Speed",
+        "windspeedmean": "Wind Speed Mean",
+        "instantaneouswinddirection": "Instantaneous Wind Direction",
+        "dissolvedoxygenconcentration": "Dissolved Oxygen Concentration",
+        "dissolvedoxygensaturation": "Dissolved Oxygen Saturation",
+        "batteryvoltage": "Battery Voltage",
+        "specificconductivity": "Specific Conductivity",
+        "barometricpressure": "Barometric Pressure",
+        "watertemperature": "Water Temperature"
     }
-    return mappingJson[string];
 
+    return mappingJson.hasOwnProperty(string.toLowerCase()) ? mappingJson[string.toLowerCase()] : string;
 }
 
 let getDataParams = (function () {
@@ -321,6 +331,7 @@ let getDataParams = (function () {
                 let object = {'name' : obj, 'uiName': uiNameMapping(obj)};
                 dataParams.push(object);
             });
+
             return dataParams;
         }
     } catch (exception) {

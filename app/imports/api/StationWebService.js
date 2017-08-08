@@ -73,7 +73,7 @@ export default class StationWebService {
         console.log(`[+] Compiling a collection of data from stations`);
         try {
             // define our method constants
-            const Humps = Npm.require('humps');
+            const Humps = require('humps');
             const DATE = new Date();
             const DURATION = Meteor.settings.defaultDuration;
             const KNOTS_TO_MPH = 1.152;
@@ -90,7 +90,7 @@ export default class StationWebService {
             console.log(startDate);
 
             let stations = Stations.find({}, {
-                fields: {dataUrl: 1, id: 1, title: 1, stationId: 1, usgs: 1, lat: 1},
+                fields: {dataUrl: 1, id: 1, title: 1, stationId: 1, usgs: 1, lat: 1, oceansMap: 1, oceansMapParameters: 1},
                 sort: { lat: -1 }
             }).fetch();
 
@@ -107,180 +107,15 @@ export default class StationWebService {
                 data.lat = station.lat;
                 data.title = station.title;
                 data.stationId = station.stationId;
-                data.usgsSite = station.usgs.split(':')[1];
 
-                /***************
-                 *  OceansMap
-                 ***************/
-                // // make the call to get the scientific data, and block with future.
-                HTTP.call('GET', compiledUrl, (error, response) => {
-                    if (error || response.error) {
-                        console.log(`[!] Error from OceansMap: ${error}`);
-                    } else {
-                        try {
-                            let responseData = Humps.camelizeKeys(response.data);
-                            let gageHeight = responseData.data.gageHeight;
-                            let oceansMapData =  Humps.camelizeKeys(response.data);
-
-                            oceansMapData = (!oceansMapData.data.times) ? null : oceansMapData;
-
-                            if (oceansMapData) {
-                                let times = [];
-
-                                oceansMapData.data.times.forEach((tick) => {
-                                    let time = moment(tick).seconds(0).milliseconds(0).toISOString();
-                                    times.push(time);
-                                });
-
-                                function createDataObject(paramName) {
-                                    // OceansMap insists on sending NaNs, which break Highcharts...
-                                    if (responseData.data[paramName] && responseData.data[paramName].values) {
-                                        let noNaNValue = responseData.data[paramName].values.map((obj) => {
-                                            return (obj === "NaN" || isNaN(obj)) ? null : obj;
-                                        });
-
-
-                                        return {
-                                            values: (responseData.data && responseData.data[paramName]) ? noNaNValue : null,
-                                            units:  (responseData.data && responseData.data[paramName]) ? responseData.data[paramName].units[0] : null,
-                                            times
-                                        }
-                                    } else {
-                                        return {
-                                            values: null,
-                                            units: null,
-                                            times: null
-                                        };
-                                    }
-                                }
-
-
-                                let rainfall = createDataObject('rainfall');
-                                let seanettleProb = createDataObject('seanettleProb');
-                                let relativeHumidity = createDataObject('relativeHumidity');
-
-                                if (data.id) {
-
-                                    if (responseData.data.dewPointTemperature && responseData.data.dewPointTemperature.values) {
-                                        let dewPointTempValues = responseData.data.dewPointTemperature.values.map((obj) => {
-                                            obj = (obj === "NaN" || isNaN(obj)) ? null : obj;
-                                            return this._convertCtoF(obj);
-                                        });
-
-                                        let dewPointTemperature = {
-                                            values: (responseData.data && responseData.data.dewPointTemperature) ? dewPointTempValues : null,
-                                            units: "F",
-                                            times
-                                        };
-
-                                        if (dewPointTemperature.values) {
-                                            data.data.dewPointTemperature = dewPointTemperature;
-                                        }
-                                    }
-
-                                    if (responseData.data.airTemperature && responseData.data.airTemperature.values) {
-                                        let airTempValues = responseData.data.airTemperature.values.map((obj) => {
-                                            obj = (obj === "NaN" || isNaN(obj)) ? null : obj;
-                                            return this._convertCtoF(obj);
-                                        });
-
-                                        let airTemperature = {
-                                            values: (responseData.data && responseData.data.airTemperature) ? airTempValues : null,
-                                            units: "F",
-                                            times
-                                        };
-
-                                        if (airTemperature.values) {
-                                            data.data.airTemperature = airTemperature;
-                                        }
-                                    }
-
-
-                                    if (responseData.data.windSpeed && responseData.data.windSpeed.values) {
-                                        let windSpeedValues = responseData.data.windSpeed.values.map((obj) => {
-                                            obj = (obj === "NaN" || isNaN(obj)) ? null : obj;
-                                            return this._convertKnotToMph(obj);
-                                        });
-
-                                        let windSpeed = {
-                                            values: (responseData.data && responseData.data.windSpeed) ? windSpeedValues : null,
-                                            units: "mph",
-                                            times
-                                        };
-
-                                        if (windSpeed.values) {
-                                            data.data.windSpeed = windSpeed;
-                                        }
-                                    }
-
-                                    let rainFall = createDataObject('rainfall');
-                                    let dissolvedOxygen = createDataObject('massConcentrationOfOxygenInSeaWater');
-                                    let ph = createDataObject('ph');
-                                    let seaWaterSalinity = createDataObject('seaWaterSalinity');
-                                    let seaWaterTemperature = createDataObject('seaWaterTemperature');
-                                    let turbidity = createDataObject('simpleTurbidity');
-                                    let windDirection = createDataObject('windFromDirection');
-                                    let airPressure = createDataObject('airPressure');
-
-                                    if (windDirection.values) {
-                                        data.data.windDirection = windDirection;
-                                    }
-
-
-                                    if (ph.values && ph.values.length > 0) {
-                                        data.data.ph = ph;
-                                    }
-
-                                    if (seaWaterTemperature.values && seaWaterTemperature.values.length > 0) {
-                                        data.data.seaWaterTemperature = seaWaterTemperature;
-                                    }
-
-                                    if (turbidity.values && turbidity.values.length > 0) {
-                                        data.data.turbidity = turbidity;
-                                    }
-
-                                    if (dissolvedOxygen.values && dissolvedOxygen.values.length > 0) {
-                                        data.data.dissolvedOxygen = dissolvedOxygen;
-                                    }
-
-                                    if (rainFall.values && rainFall.values.length > 0) {
-                                        data.data.rainFall = rainFall;
-                                    }
-
-                                    if (seaWaterSalinity.values && seaWaterSalinity.values.length > 0) {
-                                        data.data.seaWaterSalinity = seaWaterSalinity;
-                                    }
-
-                                    if (airPressure.values && airPressure.values.length > 0) {
-                                        data.data.airPressure = airPressure;
-                                    }
-
-                                }
-
-
-                                if (relativeHumidity.values && relativeHumidity.values.length > 0) {
-                                    data.data.relativeHumidity = relativeHumidity;
-                                }
-
-                                if (seanettleProb.values && seanettleProb.values.length > 0) {
-                                    data.data.seaNettleProbability = seanettleProb;
-                                }
-
-                                if (!data.data.times && times.length > 0) {
-                                    data.data.times = times;
-                                }
-
-                                Data.upsert({id: data.id}, data);
-                            }
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    }
-                });
-
+                if (station.usgs) {
+                    data.usgsSite = station.usgs.split(':')[1];
+                }
+                console.log("[+] Processing station: " + station.title);
                 /***************
                  *  BuoyJS
                  ***************/
+
                 let ndbcRootUrl = `http://www.ndbc.noaa.gov/data/realtime2/`;
                 HTTP.get(`${ndbcRootUrl}${data.stationId}.ocean`, (error, response) => {
                     if (error || response.error) {
@@ -411,6 +246,7 @@ export default class StationWebService {
                 /***************
                  *  BuoyJS
                  ***************/
+
                 HTTP.get(`${ndbcRootUrl}${data.stationId}.txt`, (error, response) => {
                     if (error || response.error) {
                         console.log(`[!] Error from BuoyJS met: ${error}`);
@@ -587,6 +423,22 @@ export default class StationWebService {
                     }
                 });
 
+                /***************
+                 *  OceansMap
+                 ***************/
+                if (station.oceansMap && station.oceansMapParameters) {
+                    console.log("Fetching OceansMap data");
+
+                    station.oceansMapParameters.forEach((parameterName) => {
+                        let parameter = this.fetchOceansMapData(station.oceansMap, parameterName, startDate, endDate);
+                        if (parameter) {
+                            data.data[parameter.standardName] = parameter;
+                            if (!data.data.times) { data.data.times = data.data[parameter.standardName].times; }
+                        }
+                    });
+                }
+
+                Data.upsert({id: data.id}, data);
             }
             console.log(`[+] Station Data compilations complete.`);
             return;
@@ -616,6 +468,8 @@ export default class StationWebService {
             weatherData = [];
 
             if (referenceStation) {
+                console.log("[+] Starting to fetch weather data");
+
                 weatherItem = {};
                 weatherItem['owner'] = payload.owner;
 
@@ -634,7 +488,7 @@ export default class StationWebService {
                         var response = HTTP.get(url);
                         weatherData.push(response.data);
                     } catch(e) {
-                        console.log('fetchWeatherForecast ${e}');
+                        console.log(`fetchWeatherForecast ${e}`);
                     }
                 }
                 weatherItem['data'] = weatherData;
@@ -643,6 +497,8 @@ export default class StationWebService {
                 //   prevents "cache" like issues where the site doesn't work while the weather web requests are running
                 Weather.remove({owner: payload.owner});
                 Weather.insert(weatherItem);
+
+                console.log("[+] Finished fetching weather data");
             }
         } catch (exception) {
             console.log('There was an error, weather data was not updated');
@@ -730,4 +586,100 @@ export default class StationWebService {
         }
     }
 
+    fetchOceansMapData(oceansMapUrl, parameterName, startDate, endDate) {
+        let standardName = this._standardizeOceansMapParameter(parameterName);
+        let timeSpan = encodeURIComponent(startDate + '/' + endDate);
+        let rootUrl = 'http://oceansmap.com/oceansmap/api/opendap';
+        let url = `${rootUrl}?url=${oceansMapUrl}&parameter=${parameterName}&time=${timeSpan}&unit_system=default`;
+
+        //console.log(`Fetching parameter: ${parameterName} (${standardName})`);
+
+        try {
+            var response = HTTP.call('GET', url);
+            if (response.error) {
+                console.log(`[!] Error from OceansMap: ${error}`);
+                return null;
+            }
+
+            // TODO: Make sure parameter name exists in properties.data
+            let oceansMapData = response.data.properties.data[parameterName];
+            if (!oceansMapData.times || !oceansMapData.values) {
+                return null;
+            }
+
+            let data = {
+                standardName: standardName,
+                times: [],
+                units:  oceansMapData.units[0],
+                type: 'timeSeries',
+            }
+
+            oceansMapData.times.forEach((tick) => {
+                let time = moment(tick).seconds(0).milliseconds(0).toISOString();
+                data.times.push(time);
+            });
+
+            // OceansMap insists on sending NaNs, which break Highcharts...
+            data.values = oceansMapData.values[0].map((obj) => {
+                return (obj === "NaN" || isNaN(obj)) ? null : obj;
+            });
+
+            return data;
+
+        } catch (e) {
+            console.log(url);
+            console.log(e);
+        }
+
+    }
+
+    _standardizeOceansMapParameter(parameterName) {
+        var mapping = {
+            "wsa": "windSpeed",
+            "wind_speed_avg": "windSpeed",
+            "wda": "windDirection",
+            "wind_dir_avg": "windDirection",
+            "wind_dir_mean": "windDirectionMean",
+            "wsi": "instantaneousWindSpeed",
+            "wind_speed_inst": "instantaneousWindSpeed",
+            "wspd_i": "instantaneousWindSpeed",
+            "wind_speed_mean": "windSpeedMean",
+            "wdi": "instantaneousWindDirection",
+            "wind_dir_inst": "instantaneousWindDirection",
+            "wdir_i": "instantaneousWindDirection",
+            "sal": "salinity",
+            "salinity": "salinity",
+            "do_mg_l": "dissolvedOxygenConcentration",
+            "do": "dissolvedOxygenConcentration",
+            "mg_diss_ox": "dissolvedOxygenConcentration",
+            "do_percent": "dissolvedOxygenSaturation",
+            "do__percent": "dissolvedOxygenSaturation",
+            "rain": "rainFall",
+            "rainfall": "rainFall",
+            "battery": "batteryVoltage",
+            "bv": "batteryVoltage",
+            "atemp": "airTemperature",
+            "spcond": "specificConductivity",
+            "sp_cond": "specificConductivity",
+            "baro": "barometricPressure",
+            "barometric_pressure": "barometricPressure",
+            "baro_press": "barometricPressure",
+            "wtemp": "waterTemperature",
+            "temp": "waterTemperature",
+            "ph": "pH",
+            "rh": "relativeHumidity",
+            "relative_humidity": "relativeHumidity",
+            "rel_humidity": "relativeHumidity",
+            "turb": "turbidity",
+            "turbidity": "turbidity",
+            "dp": "dewPoint",
+            "dew_point": "dewPoint"
+        };
+
+        if (parameterName.toLowerCase() in mapping) {
+            return mapping[parameterName.toLowerCase()];
+        }
+
+        return parameterName;
+    }
 }
