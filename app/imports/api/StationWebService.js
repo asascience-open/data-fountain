@@ -590,7 +590,7 @@ export default class StationWebService {
         let standardName = this._standardizeOceansMapParameter(parameterName);
         let timeSpan = encodeURIComponent(startDate + '/' + endDate);
         let rootUrl = 'http://oceansmap.com/oceansmap/api/opendap';
-        let url = `${rootUrl}?url=${oceansMapUrl}&parameter=${parameterName}&time=${timeSpan}&unit_system=default`;
+        let url = `${rootUrl}?url=${oceansMapUrl}&parameter=${parameterName}&time=${timeSpan}&unit_system=us`;
 
         //console.log(`Fetching parameter: ${parameterName} (${standardName})`);
 
@@ -620,8 +620,13 @@ export default class StationWebService {
             });
 
             // OceansMap insists on sending NaNs, which break Highcharts...
+            // Also handle any unit conversions
             data.values = oceansMapData.values[0].map((obj) => {
-                return (obj === "NaN" || isNaN(obj)) ? null : obj;
+                if (obj === "NaN" || isNaN(obj)) {
+                    return null;
+                }
+
+                return obj;
             });
 
             return data;
@@ -661,6 +666,7 @@ export default class StationWebService {
             "atemp": "airTemperature",
             "spcond": "specificConductivity",
             "sp_cond": "specificConductivity",
+            "spccond": "specificConductivity",
             "baro": "barometricPressure",
             "barometric_pressure": "barometricPressure",
             "baro_press": "barometricPressure",
