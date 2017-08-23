@@ -7,3 +7,5 @@ config/production/
 *.swo
 *.log
 .idea/
+build/
+

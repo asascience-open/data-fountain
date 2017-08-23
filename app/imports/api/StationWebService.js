@@ -24,6 +24,11 @@ export default class StationWebService {
         return mph;
     }
 
+    _convertMpsToMph(value) {
+        let mph = value * 2.23694;
+        return mph;
+    }
+
     fetchStations() {
         console.log('[+] Compiling a collection of stations');
         try {
@@ -610,8 +615,23 @@ export default class StationWebService {
             let data = {
                 standardName: standardName,
                 times: [],
-                units:  oceansMapData.units[0],
                 type: 'timeSeries',
+            }
+
+            // Pull the units from the returned data, or use the name of the units the data will be
+            //   in one it has been converted
+            switch (standardName) {
+                case "airTemperature":
+                case "waterTemperature":
+                    data.units = "F";
+                    break;
+                case "windSpeed":
+                case "instantaneousWindSpeed":
+                    data.units = "mph";
+                    break;
+                default:
+                    data.units = oceansMapData.units[0];
+                    break;
             }
 
             oceansMapData.times.forEach((tick) => {
@@ -626,7 +646,22 @@ export default class StationWebService {
                     return null;
                 }
 
-                return obj;
+                // Some parameters need unit conversions to remain consistent with other data sources
+                switch (standardName) {
+                    case "airTemperature":
+                    case "waterTemperature":
+                        return this._convertCtoF(obj);
+                        break;
+                    case "windSpeed":
+                    case "instantaneousWindSpeed":
+                        if (oceansMapData.units[0].toLowerCase() == "knots") {
+                            return this._convertKnotToMph(obj);
+                        } else {
+                            return this._convertMpsToMph(obj);
+                        }
+                    default:
+                        return obj;
+                }
             });
 
             return data;
