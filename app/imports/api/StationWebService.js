@@ -87,12 +87,11 @@ export default class StationWebService {
 
             // set the end date to today.
             let endDate = DATE.toISOString();
-            console.log(endDate);
+
             // calculate a new date from the duration
             let startDate = new Date();
             startDate.setHours(startDate.getHours() - DURATION);
             startDate = startDate.toISOString();
-            console.log(startDate);
 
             let stations = Stations.find({}, {
                 fields: {dataUrl: 1, id: 1, title: 1, stationId: 1, usgs: 1, lat: 1, oceansMap: 1, oceansMapParameters: 1},
@@ -542,6 +541,10 @@ export default class StationWebService {
                 weatherItem['owner'] = weather.owner;
                 weatherData = [];
 
+                if (!(weather && weather.data && weather.data.length > 0)) {
+                    continue;
+                }
+
                 let lat = weather.data[0].latitude,
                     lon = weather.data[0].longitude;
 
@@ -551,7 +554,6 @@ export default class StationWebService {
                 let startDate = (weather.data[0].currently.time * 1000) + (REFRESH * 1000 * 60 * 60);
 
                 if (lon) {
-
                     let times = [startDate];
                     
                     while (times[times.length -1] <= endDate){

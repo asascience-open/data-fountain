@@ -159,6 +159,21 @@ function getSubmitPayload(){
     return payload;
 }
 
+function updateMissingParametersWarning(){
+    let hasWindSpeed = false,
+        hasWindDirection = false,
+        hasAirTemperature = false,
+        params = getDataParams();
+
+    params.forEach((obj) => {
+        if (obj.name == 'windSpeed') { hasWindSpeed = true };
+        if (obj.name == 'windDirection') { hasWindDirection = true };
+        if (obj.name == 'airTemperature') { hasAirTemperature = true };
+    });
+
+    $("#missing-parameters").toggleClass('hidden', hasWindSpeed && hasWindDirection && hasAirTemperature);
+}
+
 //This function is called when the user changes profiles or reloads the page. It uses the profile to populate all the fields.
 function updateInputsWithProfile(userProfile){
 
@@ -227,6 +242,8 @@ function updateInputsWithProfile(userProfile){
     if(userProfile.cycleStationParams) {
         $('#singleStationParameters').show();
     }
+
+    updateMissingParametersWarning();
 }
 
 
@@ -582,6 +599,8 @@ Template.Admin.events({
         $('.proximityStationCheckbox[id=\'' + primaryStationValue + '\']').attr('checked', true);
 
         $('.js-top-plot-param').trigger('change');
+
+        updateMissingParametersWarning();
     },
     'click .proximityStationCheckbox'(event, template){
         //Don't allow the user to remove the primary station from the proximity stations.
@@ -847,6 +866,7 @@ Template.Admin.onRendered(function() {
         });
         $('#parameterAlertsTooltip').popover({placement:'bottom'});
         $('#tickerMarqueeTooltip').popover({placement:'right'});
+        $('#missingParametersTooltip').popover({placement:'right',width:200});
         updateDateSelectorRange();
 
         //Hide inputs for single station view.

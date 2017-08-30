@@ -78,6 +78,15 @@ Template.MetIcons.helpers({
                 console.log(exception);
         }
 
+    },
+    hasWindSpeed() {
+        return Template.instance().weather().hasWindSpeed;
+    },
+    hasWindDirection() {
+        return Template.instance().weather().hasWindDirection;
+    },
+    hasAirTemperature() {
+        return Template.instance().weather().hasAirTemperature;
     }
 });
 
@@ -100,7 +109,10 @@ Template.MetIcons.onCreated(function() {
         weatherDep.depend();
         return {
             forecastIo: weather.forecastIo[0],
-            ndbc: weather.ndbc
+            ndbc: weather.ndbc,
+            hasWindSpeed: dataCollection.data.hasOwnProperty('windSpeed'),
+            hasWindDirection: dataCollection.data.hasOwnProperty('windDirection'),
+            hasAirTemperature: dataCollection.data.hasOwnProperty('airTemperature')
         }
     });
     Tracker.autorun(() => {

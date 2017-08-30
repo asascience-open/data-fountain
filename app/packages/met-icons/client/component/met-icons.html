@@ -12,22 +12,28 @@
             <!-- <div data&#45;skycon="{{met.icon}}" data&#45;color="#4994D0" data&#45;width="10vw" class="center&#45;block" style="top: 15px;"></div> -->
             <div class="wi-caption">Weather</div>
         </div>
+        {{#if hasAirTemperature}}
         <div class="icons">
             <i class="wi wi-thermometer" style="font-size: 3.5vw"></i>
             <span class="wi-data"> {{tempIcon}}</span>
             <i class="wi wi-fahrenheit wi-units"></i>
             <div class="wi-caption">Temperature</div>
         </div>
+        {{/if}}
+        {{#if hasWindDirection}}
         <div class="icons">
             <span class="wi-cardinal">N</span>
             <i class="wi wi-wind towards-{{windBearing}}-deg"></i>
             <div class="wi-caption">Wind Direction</div>
         </div>
+        {{/if}}
+        {{#if hasWindSpeed}}
         <div class="icons">
             <i class="wi wi-strong-wind" style="font-size: 3vw;"></i>
             <span class="wi-data"> {{windSpeed}}<small class="wi-units" style="font-size: 1vw">mph</small></span>
             <div class="wi-caption">Wind Speed</div>
         </div>
+        {{/if}}
         <!-- <div class="icons"> -->
         <!--     <span class="wi&#45;data">48 Hours</span> -->
         <!--   <div class="wi&#45;caption">Duration</div> -->

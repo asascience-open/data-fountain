@@ -732,7 +732,6 @@
         "stationId": "41046",
         "isPrimary": false
     },
-
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_BOB_3/WAC_BOB_3.ncml",
         "oceans_map_parameters": [
@@ -825,7 +824,7 @@
         "stationId": "99996",
         "isPrimary": false
     },
-        {
+    {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Armiger_FLO_5/Armiger_FLO_5.ncml",
         "oceans_map_parameters": [
             "WSA",
@@ -859,6 +858,60 @@
             "other": false
         },
         "stationId": "99995",
+        "isPrimary": false
+    },
+    {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_FLO_1/WAC_FLO_1.ncml",
+        "oceans_map_parameters": [
+            "Temp",
+            "Sal",
+            "Battery",
+            "DO_percent",
+            "SpcCond",
+            "DO_mg_L",
+            "pH",
+            "Turb"
+        ],
+        "data_url": "/api/data/df-34",
+        "id": "df-34",
+        "image_url": "/api/image/df-34",
+        "lat": 39.20361,
+        "lon": -76.06576,
+        "title": "WAC_FLO_1",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99994",
+        "isPrimary": false
+    },
+    {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_BOB_4/WAC_BOB_4.ncml",
+        "oceans_map_parameters": [
+            "Temp",
+            "Sal",
+            "Battery",
+            "DO_percent",
+            "SpcCond",
+            "DO_mg_L",
+            "pH",
+            "Turb"
+        ],
+        "data_url": "/api/data/df-35",
+        "id": "df-35",
+        "image_url": "/api/image/df-35",
+        "lat": 39.200717,
+        "lon": -76.068646,
+        "title": "WAC_BOB_4",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99993",
         "isPrimary": false
     }
 ]
