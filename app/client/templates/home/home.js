@@ -50,8 +50,8 @@ Template.Home.onCreated(function(){
     function* indexGen() {
         let index = 0;
         while(true) {
-            if (index > DURATION + 1) {
-                index = -1;
+            if (index > DURATION) {
+                index = 0;
             }
             yield index++;
         }
@@ -72,7 +72,6 @@ Template.Home.onCreated(function(){
             let currDataTime = moment(dataTimes[dataTimes.length -1]).unix();
 
             if (userProfile.dateSliderData.to !== currDataTime && userProfile.toTimeIndex !== dataTimes.length -1) {
-
                 Meteor.users.update(Meteor.userId(), {
                     $set: {
                         'profile.dateSliderData.to': currDataTime,

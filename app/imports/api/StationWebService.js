@@ -512,6 +512,8 @@ export default class StationWebService {
     
     updateWeatherForecast() {
         try {
+            console.log("[+] Updating weather data");
+
             //This routine updates all weather collections that need to be udapted
             // These are server settings, and should be configured via the user profile.
             const FORECAST_API = process.env.FORECAST_API || Meteor.settings.forecastIoApi;
@@ -537,23 +539,22 @@ export default class StationWebService {
                     continue;
                 }
 
+                let primaryStationTitle = payload.profile.primaryStation;
+                let referenceStation = Stations.findOne({title: primaryStationTitle}, {fields: {'title': 1, 'lon': 1, 'lat': 1, 'stationId': 1}});
+                let topPlotDataParameter = payload.profile.topPlotDataParameter;
+                let primaryStationData = Data.findOne({title: primaryStationTitle},
+                                                  {fields: {data: 1, title: 1}});
+
                 weatherItem = {};
                 weatherItem['owner'] = weather.owner;
+                weatherItem['latitude'] = referenceStation.lat;
+                weatherItem['longitude'] = referenceStation.lon;
                 weatherData = [];
 
-                if (!(weather && weather.data && weather.data.length > 0)) {
-                    continue;
-                }
+                if (referenceStation.lon) {
+                    let stationDataTimes = primaryStationData.data[topPlotDataParameter].times;
+                    let startDate = moment(stationDataTimes[payload.profile.fromTimeIndex]).unix() * 1000;
 
-                let lat = weather.data[0].latitude,
-                    lon = weather.data[0].longitude;
-
-                weatherItem['latitude'] = lat;
-                weatherItem['longitude'] = lon;
-
-                let startDate = (weather.data[0].currently.time * 1000) + (REFRESH * 1000 * 60 * 60);
-
-                if (lon) {
                     let times = [startDate];
                     
                     while (times[times.length -1] <= endDate){
@@ -563,7 +564,7 @@ export default class StationWebService {
 
                     for (let i=0; i < times.length -1; i++) {
                         let unixTime = moment(times[i]).unix();
-                        let url = `https://api.darksky.net/forecast/${FORECAST_API}/${lat},${lon},${unixTime}`;
+                        let url = `https://api.darksky.net/forecast/${FORECAST_API}/${referenceStation.lat},${referenceStation.lon},${unixTime}`;
 
                         try{
                             var response = HTTP.get(url);
@@ -583,7 +584,9 @@ export default class StationWebService {
 
                     // Remove and re-add weather item, making sure to do this as close to possible to one another. This
                     //   prevents "cache" like issues where the site doesn't work while the weather web requests are running
-                    Weather.remove({_id: weather._id});
+                    if (weather) {
+                        Weather.remove({_id: weather._id});
+                    }
                     Weather.insert(weatherItem);
                 }
             }
