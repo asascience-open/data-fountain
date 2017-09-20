@@ -553,8 +553,10 @@ export default class StationWebService {
 
                 if (referenceStation.lon) {
                     let stationDataTimes = primaryStationData.data[topPlotDataParameter].times;
-                    let startDate = moment(stationDataTimes[payload.profile.fromTimeIndex]).unix() * 1000;
 
+                    // Since start date is now being determined based on the stations main parameter start time, we
+                    //   should not need to offset the start time by the refresh rate
+                    let startDate = (moment(stationDataTimes[payload.profile.fromTimeIndex]).unix() * 1000) ;//+ (REFRESH * 1000 * 60 * 60);
                     let times = [startDate];
                     
                     while (times[times.length -1] <= endDate){
@@ -617,9 +619,18 @@ export default class StationWebService {
                 return null;
             }
 
+            // Make sure that the length of the times array matches that of the data. This is to make sure there's the
+            //   same number of time intervals as data values so that we can standardize the time intervals down to
+            //   the nearest hour cleanly
+            if (oceansMapData.times.length != oceansMapData.values[0].length) {
+                console.log('[!] Amount of time intervals does not match the amount of data values');
+                return null;
+            }
+
             let data = {
                 standardName: standardName,
                 times: [],
+                values: [],
                 type: 'timeSeries',
             }
 
@@ -639,35 +650,40 @@ export default class StationWebService {
                     break;
             }
 
-            oceansMapData.times.forEach((tick) => {
-                let time = moment(tick).seconds(0).milliseconds(0).toISOString();
-                data.times.push(time);
-            });
+            let last_time = null;
+            for (var i = 0; i < oceansMapData.times.length; i++) {
+                let tick = oceansMapData.times[i],
+                    time = moment(tick).startOf('hour').seconds(0).milliseconds(0).toISOString();
+                if (last_time == time) {
+                    continue;
+                }
 
-            // OceansMap insists on sending NaNs, which break Highcharts...
-            // Also handle any unit conversions
-            data.values = oceansMapData.values[0].map((obj) => {
-                if (obj === "NaN" || isNaN(obj)) {
-                    return null;
+                data.times.push(time);
+                last_time = time;
+
+                let value = oceansMapData.values[0][i];
+                if (value === "NaN" || isNaN(value)) {
+                    data.values.push(null);
+                    continue;
                 }
 
                 // Some parameters need unit conversions to remain consistent with other data sources
                 switch (standardName) {
                     case "airTemperature":
                     case "waterTemperature":
-                        return this._convertCtoF(obj);
+                        value = this._convertCtoF(value);
                         break;
                     case "windSpeed":
                     case "instantaneousWindSpeed":
                         if (oceansMapData.units[0].toLowerCase() == "knots") {
-                            return this._convertKnotToMph(obj);
+                            value = this._convertKnotToMph(value);
                         } else {
-                            return this._convertMpsToMph(obj);
+                            value = this._convertMpsToMph(value);
                         }
-                    default:
-                        return obj;
                 }
-            });
+
+                data.values.push(value);
+            }
 
             return data;
 
@@ -681,9 +697,11 @@ export default class StationWebService {
     _standardizeOceansMapParameter(parameterName) {
         var mapping = {
             "wsa": "windSpeed",
+            "wind_speed": "windSpeed",
             "wind_speed_avg": "windSpeed",
             "wind_speed_mean": "windSpeed",
             "wda": "windDirection",
+            "wind_direction": "windDirection",
             "wind_dir_avg": "windDirection",
             "wind_dir_mean": "windDirection",
             "wsi": "instantaneousWindSpeed",
@@ -702,8 +720,10 @@ export default class StationWebService {
             "rain": "rainFall",
             "rainfall": "rainFall",
             "battery": "batteryVoltage",
+            "battery_voltage": "batteryVoltage",
             "bv": "batteryVoltage",
             "atemp": "airTemperature",
+            "air_temperature": "airTemperature",
             "spcond": "specificConductivity",
             "sp_cond": "specificConductivity",
             "spccond": "specificConductivity",
@@ -719,7 +739,8 @@ export default class StationWebService {
             "turb": "turbidity",
             "turbidity": "turbidity",
             "dp": "dewPoint",
-            "dew_point": "dewPoint"
+            "dew_point": "dewPoint",
+            "photosynth_solar_rad": "photosyntheticSolarRadiation"
         };
 
         if (parameterName.toLowerCase() in mapping) {

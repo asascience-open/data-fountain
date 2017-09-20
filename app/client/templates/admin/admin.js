@@ -328,7 +328,8 @@ function uiNameMapping(string) {
         "batteryvoltage": "Battery Voltage",
         "specificconductivity": "Specific Conductivity",
         "barometricpressure": "Barometric Pressure",
-        "watertemperature": "Water Temperature"
+        "watertemperature": "Water Temperature",
+        "photosyntheticSolarRadiation": "Photosynthetic Solar Radiation "
     }
 
     return mappingJson.hasOwnProperty(string.toLowerCase()) ? mappingJson[string.toLowerCase()] : string;

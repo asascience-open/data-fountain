@@ -913,5 +913,60 @@
         },
         "stationId": "99993",
         "isPrimary": false
+    },
+        {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WASHCO1/WASHCO1.ncml",
+        "oceans_map_parameters": [
+            "Wind_Speed",
+            "Rainfall",
+            "Dew_Point",
+            "Wind_Direction",
+            "Battery_Voltage",
+            "Photosynth_Solar_Rad",
+            "Relative_Humidity",
+            "Air_Temperature",
+            "Barometric_Pressure"
+        ],
+        "data_url": "/api/data/df-36",
+        "id": "df-36",
+        "image_url": "/api/image/df-36",
+        "lat": 39.255874,
+        "lon": -76.02584,
+        "title": "WASHCO1",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99992",
+        "isPrimary": false
+    },
+            {
+        "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Thun_FLO_3/Thun_FLO_3.ncml",
+        "oceans_map_parameters": [
+            "Temp",
+            "Sal",
+            "Battery",
+            "DO_percent",
+            "SpcCond",
+            "DO_mg_L",
+            "pH",
+            "Turb"
+        ],
+        "data_url": "/api/data/df-37",
+        "id": "df-37",
+        "image_url": "/api/image/df-37",
+        "lat": 39.160285,
+        "lon": -76.145743,
+        "title": "Thun_FLO_3",
+        "category": {
+            "cbibs": false,
+            "windWaves": false,
+            "crwo": true,
+            "other": false
+        },
+        "stationId": "99991",
+        "isPrimary": false
     }
 ]
