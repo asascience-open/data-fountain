@@ -877,7 +877,7 @@
         "image_url": "/api/image/df-34",
         "lat": 39.20361,
         "lon": -76.06576,
-        "title": "WAC_FLO_1",
+        "title": "WAC Dock",
         "category": {
             "cbibs": false,
             "windWaves": false,
@@ -904,7 +904,7 @@
         "image_url": "/api/image/df-35",
         "lat": 39.200717,
         "lon": -76.068646,
-        "title": "WAC_BOB_4",
+        "title": "Radcliffe Creek",
         "category": {
             "cbibs": false,
             "windWaves": false,
@@ -932,7 +932,7 @@
         "image_url": "/api/image/df-36",
         "lat": 39.255874,
         "lon": -76.02584,
-        "title": "WASHCO1",
+        "title": "WAC Campus",
         "category": {
             "cbibs": false,
             "windWaves": false,
@@ -959,7 +959,7 @@
         "image_url": "/api/image/df-37",
         "lat": 39.160285,
         "lon": -76.145743,
-        "title": "Thun_FLO_3",
+        "title": "East Fork Langford Creek",
         "category": {
             "cbibs": false,
             "windWaves": false,
