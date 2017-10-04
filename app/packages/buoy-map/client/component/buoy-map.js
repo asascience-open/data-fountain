@@ -54,7 +54,7 @@ Template.BuoyMap.onRendered(function(){
             let stationName = stations[i].title;
             if (stationName !== primaryStation.title) {
                 //Adding a point
-                L.circle([lat, long], 4500, {
+                L.circle([lat, long], 1500, {
                     color: 'black',
                     fillColor: 'black',
                     fillOpacity: 1
@@ -70,7 +70,7 @@ Template.BuoyMap.onRendered(function(){
                     zIndexOffset: 1000
                 }).addTo(map);
             } else {
-                L.circle([primaryStation.lat, primaryStation.lon], 4500, {
+                L.circle([primaryStation.lat, primaryStation.lon], 1500, {
                     color: 'orange',
                     fillColor: 'orange',
                     fillOpacity: 1

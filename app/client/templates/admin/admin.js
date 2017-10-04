@@ -741,7 +741,8 @@ Template.Admin.helpers({
             }
 
             let listOfStations = Stations.find({}, {
-                sort: {lat: -1}
+                //sort: {lat: -1}
+                sort: {sortOrder: 1}
             }).fetch(),
                 stationNames = [];
 
@@ -755,7 +756,7 @@ Template.Admin.helpers({
                         enabled = false;
                     }
                 }
-                let object = {'title': obj.title, 'category':obj.category, 'enabled': enabled};
+                let object = {'title': obj.title, 'category':obj.category, 'enabled': enabled, 'sortOrder': obj.sortOrder};
                 stationNames.push(object);
             });
             return stationNames;

@@ -122,8 +122,9 @@ Template.OceanPlots.helpers({
             let proximityStations = userProfile.proximityStations,
                 primaryStation =  userProfile.primaryStation;
                 proximityStationsData = Data.find({'title': {$in: proximityStations}}, {
-                    fields: {data: 1, title: 1},
-                    sort: {lat: -1}
+                    //fields: {data: 1, title: 1, sortOrder: 1},
+                    //sort: {lat: -1}
+                    sort: {sortOrder: 1}
                 }).fetch(),
                 bottomPlotDataParameter = userProfile.bottomPlotDataParameter,
                 primaryStationData = Data.findOne({title: primaryStation},
@@ -145,9 +146,9 @@ Template.OceanPlots.helpers({
                 }
 
                 //This loop makes sure that each station being graphed has the same data length by trimming/adding empty values
+                let originalIndex = 0;
                 proximityStationsData.forEach((item, index) => {
-                    let originalIndex = proximityStations.indexOf(item.title);
-
+//                    let originalIndex = proximityStations.indexOf(item.title);
                     let itemData = item.data[bottomPlotDataParameter];
 
                     //If the station has no data return an appropriately sized array of empty values.
@@ -176,9 +177,11 @@ Template.OceanPlots.helpers({
                     }
                     dataSet[originalIndex] = itemData;
                     axisLabels[originalIndex] = item.title;
+                    originalIndex++;
                 });
 
                 let flattenArray = [].concat(...dataSet);
+
                 // get the min and max values from a multidimensional array
                 if (flattenArray.length !== 0) {
                     let maxValue = flattenArray.reduce((max, array) => {
@@ -195,13 +198,13 @@ Template.OceanPlots.helpers({
                             return row[index];
                         });
                     });
+
                     let ticker;
                     Tracker.nonreactive(() => {
                         ticker = Session.get('globalTicker');
                     });
 
                     //Flip the color bars if needed.
-
                     let colorZones = [{
                         value: userProfile.parameterAlerts.lowAlert,
                         color: 'red'
