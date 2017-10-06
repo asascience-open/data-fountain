@@ -39,7 +39,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 0
+        "sortOrder": 100
     },
     {
         "data_url": "/api/data/df-02",
@@ -80,7 +80,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 1
+        "sortOrder": 101
     },
     {
         "data_url": "/api/data/df-03",
@@ -121,7 +121,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 2
+        "sortOrder": 102
     },
     {
         "data_url": "/api/data/df-04",
@@ -162,7 +162,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 3
+        "sortOrder": 103
     },
     {
         "data_url": "/api/data/df-05",
@@ -204,7 +204,7 @@
             "Gage_height"
         ],
         "isPrimary": true,
-        "sortOrder": 4
+        "sortOrder": 104
     },
     {
         "data_url": "/api/data/df-06",
@@ -245,7 +245,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 5
+        "sortOrder": 105
     },
     {
         "data_url": "/api/data/df-07",
@@ -286,7 +286,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 6
+        "sortOrder": 106
     },
     {
         "data_url": "/api/data/df-08",
@@ -327,7 +327,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 7
+        "sortOrder": 107
     },
     {
         "data_url": "/api/data/df-10",
@@ -368,7 +368,7 @@
         "usgs_parameters": [
             "Gage_height"
         ],
-        "sortOrder": 8
+        "sortOrder": 108
     },
     {
         "dataUrl": "/api/data/df-13",
@@ -412,7 +412,7 @@
         "createdAt": 1471982630,
         "stationId": "44089",
         "isPrimary": false,
-        "sortOrder": 3
+        "sortOrder": 203
     },
     {
         "dataUrl": "/api/data/df-12",
@@ -456,7 +456,7 @@
         "createdAt": 1471982630,
         "stationId": "44014",
         "isPrimary": false,
-        "sortOrder": 4
+        "sortOrder": 204
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/CBMM/CBMM.ncml",
@@ -527,7 +527,7 @@
         "usgs": "data.oceansmap.com:01580620",
         "stationId": "99999",
         "isPrimary": false,
-        "sortOrder": 0
+        "sortOrder": 400
     },
     {
         "dataUrl": "/api/data/df-20",
@@ -571,7 +571,7 @@
         "createdAt": 1471982630,
         "stationId": "44020",
         "isPrimary": false,
-        "sortOrder": 0
+        "sortOrder": 200
     },
     {
         "dataUrl": "/api/data/df-21",
@@ -615,7 +615,7 @@
         "createdAt": 1471982630,
         "stationId": "44025",
         "isPrimary": false,
-        "sortOrder": 1
+        "sortOrder": 201
     },
     {
         "dataUrl": "/api/data/df-22",
@@ -659,7 +659,7 @@
         "createdAt": 1471982630,
         "stationId": "44066",
         "isPrimary": false,
-        "sortOrder": 2
+        "sortOrder": 202
     },
     {
         "dataUrl": "/api/data/df-24",
@@ -703,7 +703,7 @@
         "createdAt": 1471982630,
         "stationId": "41002",
         "isPrimary": false,
-        "sortOrder": 5
+        "sortOrder": 205
     },
     {
         "dataUrl": "/api/data/df-25",
@@ -747,7 +747,7 @@
         "createdAt": 1471982630,
         "stationId": "41046",
         "isPrimary": false,
-        "sortOrder": 6
+        "sortOrder": 206
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_BOB_3/WAC_BOB_3.ncml",
@@ -775,7 +775,7 @@
         },
         "stationId": "99999",
         "isPrimary": false,
-        "sortOrder": 7
+        "sortOrder": 307
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Falcone_FLO_4/Falcone_FLO_4.ncml",
@@ -812,7 +812,7 @@
         },
         "stationId": "99997",
         "isPrimary": false,
-        "sortOrder": 1
+        "sortOrder": 301
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Chino_WX/Chino_WX.ncml",
@@ -842,7 +842,7 @@
         },
         "stationId": "99996",
         "isPrimary": false,
-        "sortOrder": 2
+        "sortOrder": 302
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Armiger_FLO_5/Armiger_FLO_5.ncml",
@@ -879,7 +879,7 @@
         },
         "stationId": "99995",
         "isPrimary": false,
-        "sortOrder": 0
+        "sortOrder": 300
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_FLO_1/WAC_FLO_1.ncml",
@@ -907,7 +907,7 @@
         },
         "stationId": "99994",
         "isPrimary": false,
-        "sortOrder": 4
+        "sortOrder": 304
     },
     {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WAC_BOB_4/WAC_BOB_4.ncml",
@@ -935,7 +935,7 @@
         },
         "stationId": "99993",
         "isPrimary": false,
-        "sortOrder": 5
+        "sortOrder": 305
     },
         {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/WASHCO1/WASHCO1.ncml",
@@ -964,7 +964,7 @@
         },
         "stationId": "99992",
         "isPrimary": false,
-        "sortOrder": 3
+        "sortOrder": 303
     },
             {
         "oceans_map": "http://data.oceansmap.com/thredds/dodsC/hydromet_ag/Thun_FLO_3/Thun_FLO_3.ncml",
@@ -992,6 +992,6 @@
         },
         "stationId": "99991",
         "isPrimary": false,
-        "sortOrder": 6
+        "sortOrder": 306
     }
 ]
