@@ -615,10 +615,15 @@ export default class StationWebService {
                 return null;
             }
 
-            // TODO: Make sure parameter name exists in properties.data
+            // Make sure parameter name exists in properties.data
             let oceansMapData = response.data.properties.data[parameterName];
             if (!oceansMapData.times || !oceansMapData.values) {
                 return null;
+            }
+
+            // Warn if there is no actual data for that particular parameter
+            if (oceansMapData.times.length === 0) {
+                console.log("Warning: Parameter " + parameterName + " did not return any data")
             }
 
             // Make sure that the length of the times array matches that of the data. This is to make sure there's the
