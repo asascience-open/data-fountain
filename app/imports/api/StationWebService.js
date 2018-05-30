@@ -678,7 +678,10 @@ export default class StationWebService {
                 switch (standardName) {
                     case "airTemperature":
                     case "waterTemperature":
-                        value = this._convertCtoF(value);
+                        // Only convert if we think the value is in Celsius
+                        if (oceansMapData.units[0].endsWith("C")) {
+                            value = this._convertCtoF(value);
+                        }
                         break;
                     case "windSpeed":
                     case "instantaneousWindSpeed":
