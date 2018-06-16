@@ -190,10 +190,15 @@ Template.OceanPlots.helpers({
 
                     let minValue = flattenArray.reduce((min, array) => {
                         return min <= array ? min : array;
-                    });
+                    }, 0);
+
+                    // Instead of using the first index of the data set, find the station with the most times
+                    let stationIndex = dataSet.reduce((idx, currentValue, currentIndex, arr) => {
+                        return currentValue.length > arr[idx] ? currentIndex : idx;
+                    }, 0);
 
                     // transpose the multidimensional array
-                    let plotData = dataSet[0].map((datum, index) => {
+                    let plotData = dataSet[stationIndex].map((datum, index) => {
                         return dataSet.map((row) => {
                             return row[index];
                         });
