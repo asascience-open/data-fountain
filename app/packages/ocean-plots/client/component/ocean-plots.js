@@ -192,13 +192,12 @@ Template.OceanPlots.helpers({
                         return min <= array ? min : array;
                     }, 0);
 
-                    // Instead of using the first index of the data set, find the station with the most times
-                    let stationIndex = dataSet.reduce((idx, currentValue, currentIndex, arr) => {
-                        return currentValue.length > arr[idx] ? currentIndex : idx;
-                    }, 0);
-
                     // transpose the multidimensional array
-                    let plotData = dataSet[stationIndex].map((datum, index) => {
+                    // This is bases on the size of the time array, which comes from the top plot. Using that array
+                    //   as the basis for the generated plot data ensures there are the same number of values for
+                    //   the bottom plot as the top, eliminating issues with the bottom plot breaking if values
+                    //    are not available for each tick
+                    let plotData = times.map((datum, index) => {
                         return dataSet.map((row) => {
                             return row[index];
                         });
@@ -255,7 +254,7 @@ Template.OceanPlots.helpers({
                                 },
                                 series: [{
                                     name: null,
-                                    data: plotData[ticker],
+                                    data: plotData[0],
                                     animation: {
                                         duration: 1000
                                     },
