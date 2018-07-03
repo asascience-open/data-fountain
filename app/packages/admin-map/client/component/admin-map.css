@@ -1,0 +1,107 @@
+/*****************************************************************************/
+/* AdminMap: Style */
+/*****************************************************************************/
+.admin-map {
+}
+
+.admin-map .leaflet-control-container{
+    /*display: none;*/
+}
+
+.admin-map #map {
+    min-height:0 !important;
+    /*min-height: 27vw;*/
+    height:400px !important;
+    width: 100%;
+}
+
+
+
+.maintable {width:100%;padding: 4px;border-spacing: 5px; border-collapse: separate; }
+.maintable td.left{vertical-align:top;}
+.maintable td.right{vertical-align:top;width:100%;}
+
+
+.legendTable {
+    width: 12.5vw;
+    margin-top: 5px;
+    color:black;border-spacing: 5px; border-collapse: collapse; }
+.legendTable td {
+    padding:3px;
+    text-size: 20px;
+
+}
+
+/* provide some minimal visual accomodation for IE8 and below */
+.legendTable tr{
+    background: #b8d1f3;
+}
+.legendTable td {
+    font-size: 30px;
+}
+/*  Define the background color for all the ODD background rows  */
+.legendTable tr:nth-child(odd){
+    background: #b8d1f3;
+    padding:5px;
+}
+/*  Define the background color for all the EVEN background rows  */
+.legendTable tr:nth-child(even){
+    background: #dae5f4;
+}
+#stationimg
+{
+    border:2px solid black;
+    width:12.5vw;
+}
+
+.text-labels
+{
+    position: absolute;
+    font-size: 9px;
+    font-weight:bold;
+    color:black;
+    font-family: :verdana;
+    margin:5px;
+    white-space:nowrap;
+}
+
+.tbl
+{
+    background-color:white;
+    margin:1px;
+    border:1px solid gray;
+
+}
+
+.admin-map td
+{
+    padding-left:5px;
+    padding-right:5px;
+    font-size: 12px;
+}
+
+#blackcircle {
+    width: 15px;
+    height: 15px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: black;
+}
+
+#orangecircle {
+    width: 15px;
+    height: 15px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background: orange;
+}
+
+.map-zone {
+    position: relative;
+}
+.map-zone > img {
+    position: absolute;
+    top: 0;
+}

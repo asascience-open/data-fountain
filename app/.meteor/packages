@@ -41,6 +41,7 @@ nimble:restivus
 met-icons
 ocean-plots
 buoy-map
+admin-map
 info-ticker
 auth
 accounts-password@1.3.0

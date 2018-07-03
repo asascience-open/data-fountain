@@ -9,79 +9,87 @@
             <!-- You only need this form and the form-basic.css -->
             <form class="form-horizontal" method="post" action="#">
                 <fieldset>
-                    <div class="form-title-row">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Current Preference</label>
-                        <h4 class="col-md-2"><b>{{currentPreferenceName}}</b></h4>
-                    </div>
-                    <!-- <div class="form&#45;group"> -->
-                    <!--     <label class="col&#45;md&#45;2 control&#45;label">Region</label> -->
-                    <!--     <div class="col&#45;md&#45;4"> -->
-                    <!--         <select class="category&#45;select form&#45;control js&#45;select&#45;primary" id="regionSelection"> -->
-                    <!--             <option value="Chesapeake Bay">Chesapeake Bay</option> -->
-                    <!--             <option value="Offshore">Offshore</option> -->
-                    <!--         </select> -->
-                    <!--     </div> -->
-                    <!-- </div> -->
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Station Data View</label>
+                    <div class="form-title-row"></div>
+
+                    <div class="row">
                         <div class="col-md-6">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default stationDataViewOption multipleStation active">Multiple Station</button>
-                                <button type="button" class="btn btn-default stationDataViewOption singleStation">Single Station</button>
+                             <div class="form-group">
+                                <label class="col-md-4 control-label">Current Preference</label>
+                                <h4 class="col-md-4"><b>{{currentPreferenceName}}</b></h4>
+                            </div>
+                            <!-- <div class="form&#45;group"> -->
+                            <!--     <label class="col&#45;md&#45;2 control&#45;label">Region</label> -->
+                            <!--     <div class="col&#45;md&#45;4"> -->
+                            <!--         <select class="category&#45;select form&#45;control js&#45;select&#45;primary" id="regionSelection"> -->
+                            <!--             <option value="Chesapeake Bay">Chesapeake Bay</option> -->
+                            <!--             <option value="Offshore">Offshore</option> -->
+                            <!--         </select> -->
+                            <!--     </div> -->
+                            <!-- </div> -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Station Data View</label>
+                                <div class="col-md-6">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-default stationDataViewOption multipleStation active">Multiple Station</button>
+                                        <button type="button" class="btn btn-default stationDataViewOption singleStation">Single Station</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">
+                                    Primary Station
+                                </label>
+                                <div class="col-md-6">
+                                    <select class="category-select form-control js-select-primary" id="primaryStation">
+                                        {{#unless primaryStation}}
+                                            <option value="">-- Please Choose One --</option>
+                                        {{/unless}}
+                                        {{#each stationsList}}
+                                        <option value="{{this.title}}">{{this.title}}</option>
+                                        {{/each}}
+                                    </select>
+
+                                    <p class="control-explanation">Select a station.</p>
+                                </div>
+                                <div class="col-md-2 hidden" id="missing-parameters">
+                                    <a tabindex="0" class="btn btn-default" id="missingParametersTooltip" role="button" data-toggle="popover" data-trigger="hover" title="Missing Parameters" data-content="This station is missing some of the data parameters needed for the icons at the top of the page. Any icons without backing data will be hidden.">
+                                        <i class="fa fa-warning"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">
+                                    Line Plot (top)
+                                </label>
+                                <div class="col-md-6">
+                                    <select class="category-select form-control js-top-plot-param" id="topPlotDataParameter">
+                                        {{#each dataParams}}
+                                            <option value="{{this.name}}"> {{this.uiName}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <p class="control-explanation">Select a data paramter.</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">
+                                    Bar Plot (bottom)
+                                </label>
+                                <div class="col-md-6">
+                                    <select class="category-select form-control js-select-bottom-parameter" id="bottomPlotDataParameter">
+                                        {{#each dataParams}}
+                                        <option value="{{this.name}}">{{this.uiName}}</option>
+                                        {{/each}}
+                                    </select>
+                                    <input type="checkbox" id="chkCycleParams" /><label>&nbsp; Cycle data parameters?</label>
+                                    <p class="control-explanation">Select a bar plot parameter.</p>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            {{> AdminMap}}
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Primary Station
-                        </label>
-                        <div class="col-md-3">
-                            <select class="category-select form-control js-select-primary" id="primaryStation">
-                                {{#unless primaryStation}}
-                                    <option value="">-- Please Choose One --</option>
-                                {{/unless}}
-                                {{#each stationsList}}
-                                <option value="{{this.title}}">{{this.title}}</option>
-                                {{/each}}
-                            </select>
 
-                            <p class="control-explanation">Select a station.</p>
-                        </div>
-                        <div class="col-md-5 hidden" id="missing-parameters">
-                            <a tabindex="0" class="btn btn-default" id="missingParametersTooltip" role="button" data-toggle="popover" data-trigger="hover" title="Missing Parameters" data-content="This station is missing some of the data parameters needed for the icons at the top of the page. Any icons without backing data will be hidden.">
-                                <i class="fa fa-warning"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Line Plot (top)
-                        </label>
-                        <div class="col-md-3">
-                            <select class="category-select form-control js-top-plot-param" id="topPlotDataParameter">
-                                {{#each dataParams}}
-                                    <option value="{{this.name}}"> {{this.uiName}}</option>
-                                {{/each}}
-                            </select>
-                            <p class="control-explanation">Select a data paramter.</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Bar Plot (bottom)
-                        </label>
-                        <div class="col-md-3">
-                            <select class="category-select form-control js-select-bottom-parameter" id="bottomPlotDataParameter">
-                                {{#each dataParams}}
-                                <option value="{{this.name}}">{{this.uiName}}</option>
-                                {{/each}}
-                            </select>
-                            <input type="checkbox" id="chkCycleParams" /><label>&nbsp; Cycle data parameters?</label>
-                            <p class="control-explanation">Select a bar plot parameter.</p>
-                        </div>
-                    </div>
                     <div class="form-group" id="singleStationParameters">
                         <label class="col-md-2 control-label">Station Parameters</label>
                         <div class="col-md-6">
