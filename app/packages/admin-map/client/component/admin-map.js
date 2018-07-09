@@ -31,8 +31,7 @@ Template.AdminMap.onCreated(function(){
 
 Template.AdminMap.onRendered(function(){
     try {
-        let proximityStations = Meteor.user().profile.proximityStations;
-        let stations = Stations.find({'title': {$in: proximityStations}}).fetch(),
+        let stations = Stations.find({}).fetch(),
             primaryStation = Stations.findOne({title: Meteor.user().profile.primaryStation});
 
         //Map Initialization
