@@ -43,7 +43,6 @@ Template.AdminMap.onRendered(function(){
             id: 'mapbox.streets'
         }).addTo(map);
 
-
         for(i=0;i<stations.length;i++)
         {
             let lat=Number(stations[i].lat);//latitude
@@ -51,29 +50,15 @@ Template.AdminMap.onRendered(function(){
             let stationName = stations[i].title;
 
             //Adding a point
-            if (stations[i].id == primaryStation.id) {
-                L.circle([lat, long], 1500, {
-                    color: 'orange',
-                    fillColor: 'orange',
-                    fillOpacity: 1
-                }).addTo(map);
-            } else {
-                L.circle([lat, long], 1500, {
-                    color: 'black',
-                    fillColor: 'black',
-                    fillOpacity: 1
-                }).addTo(map);
-            }
-
-
-            //Adding a Label
-            let textLatLng = [lat, long+0.2];
-            let myTextLabel = L.marker(textLatLng, {
-                icon: L.divIcon({
-                    className: 'text-labels',
-                    html: '<table class=tbl><tr><td>'+stationName+'</td></tr></table>'
-                }),
-                zIndexOffset: 1000
+            L.circleMarker([lat, long], {
+                radius: 4,
+                color: 'red',
+                fillColor: 'red',
+                fillOpacity: 1
+            }).bindLabel(stationName, {
+                direction: "auto",
+                noHide: true,
+                className: "circle-marker-label"
             }).addTo(map);
         }
 

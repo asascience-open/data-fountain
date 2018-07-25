@@ -57,11 +57,11 @@
 .text-labels
 {
     position: absolute;
-    font-size: 9px;
-    font-weight:bold;
+    font-size: 8px;
+    font-weight:normal;
     color:black;
     font-family: :verdana;
-    margin:5px;
+    margin:4px;
     white-space:nowrap;
 }
 
@@ -75,9 +75,9 @@
 
 .admin-map td
 {
-    padding-left:5px;
-    padding-right:5px;
-    font-size: 12px;
+    padding-left:3px;
+    padding-right:3px;
+    font-size: 10px;
 }
 
 #blackcircle {
@@ -104,4 +104,17 @@
 .map-zone > img {
     position: absolute;
     top: 0;
+}
+
+.circle-marker-label {
+    border:1px solid gray;
+    font-size: 10px;
+    font-weight:normal;
+    color:black;
+    font-family: "Source Sans Pro", sans-serif;
+    white-space:nowrap;
+    line-height:14px;
+    padding:0px 4px;
+    border-radius:2px;
+    background:#fff;
 }
